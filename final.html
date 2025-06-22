@@ -1,0 +1,2539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shreya Lal - Portfolio</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/github-calendar@latest/dist/github-calendar-responsive.css"/>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #4f46e5;
+            --accent: #8b5cf6;
+            --dark: #1e293b;
+            --darker: #0f172a;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --light-gray: #e2e8f0;
+            --transition: all 0.3s ease;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --glow: 0 0 15px rgba(66, 153, 225, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid rgba(100, 116, 139, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Dropdown container */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown content (hidden by default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.98);
+            min-width: 200px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            color: var(--dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {
+            background-color: var(--light-gray);
+            color: var(--primary);
+        }
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Add a little arrow to indicate dropdown */
+        .dropdown > .tab-btn::after {
+            content: "▼";
+            font-size: 0.6em;
+            margin-left: 5px;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        /* Rotate arrow when dropdown is open */
+        .dropdown:hover > .tab-btn::after {
+            transform: rotate(180deg);
+        }
+
+        /* .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+        } */
+         .logo {
+            width: 100px; /* Set the desired width of the logo container */
+            /* margin: 20px auto; Centers the container horizontally */
+            text-align: left; /* Centers content inside the container */
+        }
+
+
+        /* .logo i {
+            color: var(--accent);
+        } */
+
+         /* Ensure the logo image scales responsively */
+        .logo img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            cursor: pointer;
+        }
+
+
+        .nav-tabs {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--dark);
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .tab-btn:hover {
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 3px;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 3rem 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+            display: inline-block;
+            color: var(--dark);
+            position: relative;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+
+        /* Home Page */
+
+        .hero {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            margin-bottom: 4rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            color: var(--dark);
+        }
+
+        .hero-text h1 span {
+            color: var(--primary);
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            max-width: 600px;
+            text-align: justify;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+/* Optional: styling for the blinking cursor */
+      .cursor {
+        display: inline-block;
+        background-color: #000;
+        width: 2px;
+        margin-left: 3px;
+        animation: blink 0.7s steps(2) infinite;
+      }
+      @keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+        .profile-img {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: all 0.5s ease;
+        }
+
+        .profile-img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(66, 153, 225, 0.2);
+        }
+
+        /* Skills Section */
+        .skills-section {
+            margin-bottom: 4rem;
+        }
+
+        .skills-container {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .skills-column {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+        }
+
+        .skills-column:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glow);
+        }
+
+        .skills-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .skills-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .skills-header p {
+            color: var(--gray);
+        }
+
+        .chart-container {
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: rgba(30, 41, 59, 0.95);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+        
+        .tooltip:after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: rgba(30, 41, 59, 0.95) transparent transparent;
+        }
+
+        /* GitHub Activity */
+        .github-section {
+            margin-bottom: 4rem;
+        }
+
+        .github-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .github-stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            min-width: 200px;
+            margin: 0.5rem;
+            transition: var(--transition);
+            border: 1px solid #bae6fd;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glow);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--gray);
+        }
+
+        #github-chart {
+            height: 300px;
+            margin-top: 2rem;
+        }
+
+        /* Timeline Section */
+        .timeline-section {
+            margin-bottom: 4rem;
+        }
+
+        .timeline-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+            left: 50%;
+            margin-left: -2px;
+        }
+
+        .timeline-item {
+            padding: 20px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            position: relative;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: 3px solid white;
+            border-radius: 50%;
+            top: 30px;
+            right: -12px;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+        }
+
+        .timeline-item:nth-child(even) .timeline-dot {
+            left: -12px;
+        }
+
+        .timeline-date {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timeline-date i {
+            color: var(--accent);
+        }
+
+        .timeline-title {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .timeline-subtitle {
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        .timeline-description {
+            color: var(--gray);
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        /* Projects Page */
+
+        /* Projects Layout */
+        .projects-container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        /* Navigation Sidebar */
+        .projects-nav {
+            width: 250px;
+            flex-shrink: 0;
+        }
+        
+        .nav-dropdown {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            margin-bottom: 10px;
+            display: none;
+        }
+        
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .nav-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s;
+        }
+        
+        .nav-item:last-child {
+            border-bottom: none;
+        }
+        
+        .nav-item:hover {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .nav-item.active {
+            background-color: #2c3e50;
+            color: white;
+        }
+        
+        /* Projects Grid */
+        .projects-content {
+            flex-grow: 1;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .project-card.active {
+            display: block; /* Show active projects */
+        }
+
+        .project-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+            border-bottom: 4px solid var(--primary);
+        }
+
+        .project-content {
+            padding: 1.5rem;
+        }
+
+        .project-title {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .project-description {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-badge {
+            background: #f0f9ff;
+            color: var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid #bae6fd;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--glow);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: var(--glow);
+        }
+
+        /* Resume Page */
+        .resume-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .resume-viewer {
+            width: 100%;
+            max-width: 800px;
+            height: 600px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pdf-controls {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+            background-color: var(--light-gray);
+            border-bottom: 1px solid #ccc;
+        }
+
+        .pdf-controls button {
+            margin: 0 5px;
+            padding: 5px 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #pdf-viewer {
+            flex: 1;
+            overflow: auto;
+            padding: 20px;
+        }
+
+        #pdf-viewer canvas {
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .resume-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            margin-bottom: 4rem;
+        }
+
+        .contact-container {
+            max-width: 600px;
+            margin: 0 auto;
+            /* background: rgba(242, 243, 246, 0.954); */
+            /* background-color: var(--bg-card); */
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            /* border: 1px solid var(--border-color); */
+            border: 1px solid #03334c;
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: rgba(15, 22, 33, 0.7);
+            background-color: #b8d3fd ;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(33, 64, 126, 0.664);
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--darker);
+            color: white;
+            padding: 3rem 0 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 1.4rem;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: var(--glow);
+        }
+
+        /* Technical Tools Section */
+        .tools-section {
+            margin-bottom: 4rem;
+        }
+
+        .tools-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .carousel-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            height: 180px;
+            margin: 20px 0;
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 100%;
+        }
+
+        .tool-item {
+            min-width: 150px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+            transition: all 0.3s;
+        }
+
+        .tool-item:hover {
+            transform: scale(1.1);
+        }
+
+        .tool-item svg {
+            height: 80px;
+            width: auto;
+            margin-bottom: 10px;
+        }
+
+        .tool-name {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            color: var(--dark);
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(59, 130, 246, 0.7);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 50%;
+            z-index: 10;
+            transition: var(--transition);
+        }
+
+        .carousel-btn:hover {
+            background: var(--primary);
+            box-shadow: var(--glow);
+        }
+
+        #prevBtn {
+            left: 10px;
+        }
+
+        #nextBtn {
+            right: 10px;
+        }
+
+        /* Certificates Section */
+        .certificates-section {
+            margin-bottom: 4rem;
+        }
+
+        .certificates-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .certificate-card {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border: 1px solid #bae6fd;;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .certificate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .certificate-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .certificate-info {
+            padding: 1.5rem;
+        }
+
+        .certificate-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+
+        .certificate-issuer {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .certificate-category {
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            /* font-style: italic; */
+            /* font-family: 'Roboto Slab', serif; */
+        }
+
+        .certificate-date {
+            color: var(--gray);
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+
+        /* Responsive Design */
+
+        @media (max-width: 768px) {
+            .dropdown-content {
+                position: static;
+                width: 100%;
+                box-shadow: none;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease-out;
+            }
+            
+            /* Class to show dropdown when clicked */
+            .dropdown-content.show {
+                max-height: 500px; /* Adjust based on your content height */
+                display: block;
+            }
+            
+            /* Make the dropdown button full width */
+            .dropdown > .tab-btn {
+                width: 100%;
+                text-align: left;
+            }
+            
+            /* Remove hover effect on mobile */
+            .dropdown:hover .dropdown-content {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dropdown > .tab-btn::after {
+                content: "▼";
+                float: right;
+                transition: transform 0.3s ease;
+            }
+            
+            .dropdown-content.show + .tab-btn::after {
+                transform: rotate(180deg);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                flex-direction: column;
+            }
+            
+            .hero-text {
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-tabs {
+                gap: 1rem;
+            }
+
+            .timeline-container::before {
+                left: 30px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+
+            .timeline-dot {
+                left: 18px;
+                right: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .projects-container {
+                flex-direction: column;
+            }
+            
+            .projects-nav {
+                width: 100%;
+            }
+            
+            .nav-dropdown {
+                display: block;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .nav-tabs {
+                gap: 0.8rem;
+            }
+            
+            .tab-btn {
+                font-size: 1rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-text h1 {
+                font-size: 2.3rem;
+            }
+
+            .github-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .certificates-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .carousel-container {
+                height: 150px;
+            }
+
+            .tool-item {
+                min-width: 120px;
+            }
+
+            .tool-item svg {
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <!-- Logo container -->
+                <div class="logo">
+                    <a href="#home">
+                        <img src="C:/Users/Shreya/Downloads/AICOCOON PROJECTS/d3_viz/images/logo.png" alt="Company Logo">
+                    </a>
+                </div>
+
+                <div class="nav-tabs">
+                    <!-- Home with dropdown -->
+                    <div class="dropdown">
+                        <button class="tab-btn active" data-tab="home">Home</button>
+                        <div class="dropdown-content">
+                            <!-- <a href="#hero">Hero</a> -->
+                            <a href="#skills">Skills</a>
+                            <a href="#tools">Tools</a>
+                            <a href="#work_education">Work & Education</a>
+                            <a href="#certificate">Awards & Certificates</a>
+                            <a href="#github">GitHub</a>
+                            <!-- <a href="#contact">Contact</a> -->
+                        </div>
+                    </div>
+                    
+                    <button class="tab-btn" data-tab="projects">Projects</button>
+                    <button class="tab-btn" data-tab="resume">Resume</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Home Tab -->
+        <div id="home" class="tab-content active">
+            <section class="hero" id="hero">
+                <div class="hero-text">
+                    <h1>Hi, I'm <span id="typewriter"></span><span class="cursor"></span></h1>
+                    <p>AI Engineer & Python Developer with 5+ years of experience, specializing in Computer Vision and Large Language Models. I develop sophisticated open source interactive tools that transform complex AI concepts into engaging, accessible visual experiences. My work seamlessly bridges advanced research with practical, intuitive learning for diverse audiences.</p>
+                    <div class="project-actions">
+                        <a href="#contact" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Contact Me
+                        </a>
+                        <a href="https://github.com/Shreya-Lal" target="_blank" class="btn btn-outline">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="C:/Users/Shreya/Downloads/AICOCOON PROJECTS/d3_viz/images/profile_pic.jpg" alt="Profile" class="profile-img">
+                </div>
+            </section>
+
+
+            <section class="skills-section" id="skills">
+                <div class="section-title">
+                    <h2>Skills Showcase</h2>
+                </div>
+                <div class="skills-container">
+                    <!-- Soft Skills Column -->
+                    <div class="skills-column">
+                        <div class="skills-header">
+                            <h3>Soft Skills</h3>
+                            <p>Interpersonal abilities and personal attributes</p>
+                        </div>
+                        <div id="soft-skills-chart" class="chart-container"></div>
+                    </div>
+                    
+                    <!-- Hard Skills Column -->
+                    <div class="skills-column">
+                        <div class="skills-header">
+                            <h3>Hard Skills</h3>
+                            <p>Technical competencies and expertise</p>
+                        </div>
+                        <div id="hard-skills-chart" class="chart-container">
+                            <div class="tooltip" id="radar-tooltip"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Technical Tools Section -->
+            <section class="tools-section" id="tools">
+                <div class="section-title">
+                    <h2>Technical Tools</h2>
+                </div>
+                <div class="tools-container">
+                    <div class="carousel-container">
+                        <button class="carousel-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+                        <div class="carousel" id="toolsCarousel"></div>
+                        <button class="carousel-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="timeline-section" id="work_education">
+                <div class="section-title">
+                    <h2>Work & Education</h2>
+                </div>
+                <div class="timeline-container">
+                    <!-- Work Experience -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-date">
+                                <i class="fas fa-calendar-alt"></i> Jan 2022 - Present
+                            </div>
+                            <h3 class="timeline-title">Senior Frontend Developer</h3>
+                            <div class="timeline-subtitle">Tech Innovations Inc.</div>
+                            <p class="timeline-description">Leading frontend development for enterprise SaaS products. Implementing D3.js for data visualization dashboards and mentoring junior developers.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Education -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-date">
+                                <i class="fas fa-calendar-alt"></i> Aug 2018 - Dec 2021
+                            </div>
+                            <h3 class="timeline-title">MSc in Computer Science</h3>
+                            <div class="timeline-subtitle">Stanford University</div>
+                            <p class="timeline-description">Specialized in Human-Computer Interaction and Data Visualization. Thesis on "Interactive Visual Analytics for Large Datasets".</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Work Experience -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-date">
+                                <i class="fas fa-calendar-alt"></i> Jun 2016 - Jul 2018
+                            </div>
+                            <h3 class="timeline-title">Web Developer</h3>
+                            <div class="timeline-subtitle">Digital Solutions LLC</div>
+                            <p class="timeline-description">Developed responsive web applications using modern JavaScript frameworks. Created data visualizations for client analytics dashboards.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Education -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-date">
+                                <i class="fas fa-calendar-alt"></i> Sep 2012 - May 2016
+                            </div>
+                            <h3 class="timeline-title">BSc in Software Engineering</h3>
+                            <div class="timeline-subtitle">MIT</div>
+                            <p class="timeline-description">Graduated with honors. Focused on web technologies and data visualization. President of Web Development Club.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Certificates Section -->
+            <section class="certificates-section" id="certificate">
+                <div class="section-title">
+                    <h2>Awards & Certifications</h2>
+                </div>
+                <div class="certificates-container">
+                    <div class="certificates-grid" id="certificatesGrid"></div>
+                </div>
+            </section>
+
+            <!-- Github Section -->
+            <section class="github-section" id="github">
+            <div class="section-title">
+                <h2>GitHub Activity</h2>
+            </div>
+            <div class="github-container">
+                <div class="github-stats" id="github-stats">
+                    <!-- Stats will be populated by JavaScript -->
+                    <div class="stat-card">
+                        <div class="stat-value" id="repo-count">--</div>
+                        <div class="stat-label">Repositories</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="commit-count">--</div>
+                        <div class="stat-label">Commits</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="star-count">--</div>
+                        <div class="stat-label">Stars</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="follower-count">--</div>
+                        <div class="stat-label">Followers</div>
+                    </div>
+                </div>
+                <!-- GitHub Calendar will be rendered here -->
+                <div class="calendar">
+                    <!-- Loading text will be replaced by GitHub calendar -->
+                    <p>Loading GitHub contributions...</p>
+                </div>
+            </div>
+        </section>
+
+            
+
+            <!-- Contact Section -->
+            <section class="contact-section" id="contact">
+                <div class="section-title">
+                    <h2>Contact Me</h2>
+                </div>
+                <div class="contact-container">
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </div>
+
+        <!-- Projects Tab -->
+        <div id="projects" class="tab-content">
+            <div class="section-title">
+                <h2>My Projects</h2>
+            </div>
+
+            <div class="projects-container">
+                <!-- Navigation Sidebar -->
+                <div class="projects-nav">
+                    <select class="nav-dropdown" id="mobileNav">
+                        <option value="all">All Projects</option>
+                        <option value="ml">Machine Learning</option>
+                        <option value="viz">Interactive Visual Tools</option>
+                        <option value="notebook">Jupyter Notebooks</option>
+                    </select>
+                    
+                    <ul class="nav-menu" id="desktopNav">
+                        <li class="nav-item active" data-category="all">All Projects</li>
+                        <li class="nav-item" data-category="ml">Machine Learning</li>
+                        <li class="nav-item" data-category="viz">Interactive Visual Tools</li>
+                        <li class="nav-item" data-category="notebook">Jupyter Notebooks</li>
+                    </ul>
+                </div>
+
+            <div class="projects-content">
+                    <div class="projects-grid">
+                        <!-- Project 1 -->
+                        <div class="project-card" data-category="viz">
+                            <!-- Placeholder for project image -->
+                            <div class="project-img" style="background: linear-gradient(45deg, #3b82f6, #8b5cf6);"></div>
+                            <div class="project-content">
+                                <h3 class="project-title">Interactive Data Dashboard</h3>
+                                <p class="project-description">A real-time dashboard for visualizing financial data with interactive charts and filtering options.</p>
+                                <div class="project-tech">
+                                    <span class="tech-badge">D3.js</span>
+                                    <span class="tech-badge">React</span>
+                                    <span class="tech-badge">Node.js</span>
+                                    <span class="tech-badge">MongoDB</span>
+                                </div>
+                                <div class="project-actions">
+                                    <a href="#" class="btn btn-primary">
+                                        <i class="fas fa-external-link-alt"></i> Live Demo
+                                    </a>
+                                    <a href="#" class="btn btn-outline">
+                                        <i class="fab fa-github"></i> GitHub
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 2 -->
+                        <div class="project-card" data-category="ml">
+                            <!-- Placeholder for project image -->
+                            <div class="project-img" style="background: linear-gradient(45deg, #10b981, #06b6d4);"></div>
+                            <div class="project-content">
+                                <h3 class="project-title">Predictive Maintenance System</h3>
+                                <p class="project-description">Machine learning model to predict equipment failures using sensor data and historical maintenance records.</p>
+                                <div class="project-tech">
+                                    <span class="tech-badge">Python</span>
+                                    <span class="tech-badge">Scikit-learn</span>
+                                    <span class="tech-badge">TensorFlow</span>
+                                    <span class="tech-badge">Pandas</span>
+                                </div>
+                                <div class="project-actions">
+                                    <a href="#" class="btn btn-primary">
+                                        <i class="fas fa-external-link-alt"></i> Live Demo
+                                    </a>
+                                    <a href="#" class="btn btn-outline">
+                                        <i class="fab fa-github"></i> GitHub
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 3 -->
+                        <div class="project-card" data-category="viz">
+                            <!-- Placeholder for project image -->
+                            <div class="project-img" style="background: linear-gradient(45deg, #ec4899, #f97316);"></div>
+                            <div class="project-content">
+                                <h3 class="project-title">Geospatial Data Visualizer</h3>
+                                <p class="project-description">Interactive map-based visualization for displaying geospatial data with clustering and heatmaps.</p>
+                                <div class="project-tech">
+                                    <span class="tech-badge">D3.js</span>
+                                    <span class="tech-badge">Leaflet</span>
+                                    <span class="tech-badge">Python</span>
+                                    <span class="tech-badge">GeoJSON</span>
+                                </div>
+                                <div class="project-actions">
+                                    <a href="#" class="btn btn-primary">
+                                        <i class="fas fa-external-link-alt"></i> Live Demo
+                                    </a>
+                                    <a href="#" class="btn btn-outline">
+                                        <i class="fab fa-github"></i> GitHub
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project 4 -->
+                        <div class="project-card" data-category="notebook">
+                            <!-- Placeholder for project image -->
+                            <div class="project-img" style="background: linear-gradient(45deg, #8b5cf6, #3b82f6);"></div>
+                            <div class="project-content">
+                                <h3 class="project-title">LLM Model Analysis</h3>
+                                <p class="project-description">Jupyter notebook exploring transformer architectures and their performance on NLP tasks.</p>
+                                <div class="project-tech">
+                                    <span class="tech-badge">Python</span>
+                                    <span class="tech-badge">Jupyter</span>
+                                    <span class="tech-badge">PyTorch</span>
+                                    <span class="tech-badge">Transformers</span>
+                                </div>
+                                <div class="project-actions">
+                                    <a href="#" class="btn btn-primary">
+                                        <i class="fas fa-external-link-alt"></i> View Notebook
+                                    </a>
+                                    <a href="#" class="btn btn-outline">
+                                        <i class="fab fa-github"></i> GitHub
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Project 5 -->
+                        <div class="project-card" data-category="ml">
+                            <!-- Placeholder for project image -->
+                            <div class="project-img" style="background: linear-gradient(45deg, #06b6d4, #10b981);"></div>
+                            <div class="project-content">
+                                <h3 class="project-title">Computer Vision Pipeline</h3>
+                                <p class="project-description">End-to-end computer vision system for object detection and classification in manufacturing.</p>
+                                <div class="project-tech">
+                                    <span class="tech-badge">Python</span>
+                                    <span class="tech-badge">OpenCV</span>
+                                    <span class="tech-badge">TensorFlow</span>
+                                    <span class="tech-badge">YOLO</span>
+                                </div>
+                                <div class="project-actions">
+                                    <a href="#" class="btn btn-primary">
+                                        <i class="fas fa-external-link-alt"></i> Live Demo
+                                    </a>
+                                    <a href="#" class="btn btn-outline">
+                                        <i class="fab fa-github"></i> GitHub
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Project 6 -->
+                        <div class="project-card" data-category="viz">
+                            <!-- Placeholder for project image -->
+                            <div class="project-img" style="background: linear-gradient(45deg, #f97316, #ec4899);"></div>
+                            <div class="project-content">
+                                <h3 class="project-title">AI Learning Platform</h3>
+                                <p class="project-description">Interactive educational platform for visualizing machine learning algorithms and concepts.</p>
+                                <div class="project-tech">
+                                    <span class="tech-badge">D3.js</span>
+                                    <span class="tech-badge">Vue.js</span>
+                                    <span class="tech-badge">Python</span>
+                                    <span class="tech-badge">Gradio</span>
+                                </div>
+                                <div class="project-actions">
+                                    <a href="#" class="btn btn-primary">
+                                        <i class="fas fa-external-link-alt"></i> Live Demo
+                                    </a>
+                                    <a href="#" class="btn btn-outline">
+                                        <i class="fab fa-github"></i> GitHub
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resume Tab -->
+        <div id="resume" class="tab-content">
+            <div class="section-title">
+                <h2>My Resume</h2>
+            </div>
+            <div class="resume-container">
+                <div class="resume-viewer">
+                    <div class="pdf-controls">
+                        <button id="prev-page"><i class="fas fa-arrow-left"></i> Previous</button>
+                        <span>Page: <span id="page-num"></span> of <span id="page-count"></span></span>
+                        <button id="next-page">Next <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                    <div id="pdf-viewer"></div>
+                </div>
+                <div class="resume-actions">
+                    <a href="#" class="btn btn-primary" id="download-resume">
+                        <i class="fas fa-download"></i> Download Resume
+                    </a>
+                    <a href="#" class="btn btn-outline" id="print-resume">
+                        <i class="fas fa-print"></i> Print Resume
+                    </a>
+                </div>
+            </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="social-links">
+                <a href="https://github.com/Shreya-Lal" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/lalshreya/" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                <!-- <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-codepen"></i></a>-->
+                <a href="https://www.aicocoon.ca/" class="social-link"><i class="fa fa-globe"></i></a> 
+            </div>
+            <p>© 2025 Shreya Lal. All rights reserved.</p>
+            <p style="margin-top: 1rem; color: rgba(255,255,255,0.7); font-size: 0.9rem;">
+                Developer: Shreya Lal <br>
+                Crafted with <i class="fas fa-heart" style="color: var(--accent);"></i> and D3.js (Vibe Coding)
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Home navigation dropdown
+        document.querySelectorAll('.dropdown-content a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Remove active class from all tab buttons
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Add active class to home tab
+                document.querySelector('.dropdown > .tab-btn').classList.add('active');
+                
+                // Show home content (in case another tab was active)
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById('home').classList.add('active');
+            });
+        });
+
+        // Mobile navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile dropdown toggle
+            const dropdowns = document.querySelectorAll('.dropdown');
+            
+            dropdowns.forEach(dropdown => {
+                const btn = dropdown.querySelector('.tab-btn');
+                
+                // Toggle dropdown on click for mobile
+                btn.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768) { // Only for mobile
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // Close other open dropdowns
+                        document.querySelectorAll('.dropdown-content.show').forEach(openDropdown => {
+                            if (openDropdown !== dropdown.querySelector('.dropdown-content')) {
+                                openDropdown.classList.remove('show');
+                            }
+                        });
+                        
+                        // Toggle this dropdown
+                        const content = dropdown.querySelector('.dropdown-content');
+                        content.classList.toggle('show');
+                    }
+                });
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) { // Only for mobile
+                    if (!e.target.matches('.dropdown > .tab-btn')) {
+                        document.querySelectorAll('.dropdown-content.show').forEach(dropdown => {
+                            dropdown.classList.remove('show');
+                        });
+                    }
+                }
+            });
+            
+            // Close dropdown after selecting an item (for mobile)
+            document.querySelectorAll('.dropdown-content a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        this.closest('.dropdown-content').classList.remove('show');
+                    }
+                });
+            });
+        });
+
+        // Tab Navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all buttons and contents
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    btn.classList.add('active');
+                    
+                    // Show corresponding content
+                    const tabId = btn.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+
+                    // Initialize PDF viewer when resume tab is opened
+                    if (tabId === 'resume' && !pdfInitialized) {
+                        initPDFViewer();
+                        pdfInitialized = true;
+                    }
+
+                    // // Initialize projects when projects tab is opened
+                    // if (tabId === 'projects') {
+                    //     createProjectsGrid();
+                    // }
+                });
+            });
+            
+            // Create Skills Visualizations
+            createSoftSkillsChart();
+            createHardSkillsChart();
+            
+            // Create GitHub Activity Chart
+            createGitHubChart();
+
+            // Create Technical Tools Carousel
+            createToolsCarousel();
+
+            // Create Certificates Grid
+            createCertificatesGrid();
+
+            // Form submission handler
+            const contactForm = document.getElementById('contact-form');
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Thank you for your message! I\'ll get back to you soon.');
+                contactForm.reset();
+            });
+
+            // Typewriter effect
+            const titles = [
+                "Shreya Lal",
+                "AI Engineer",
+                "Interactive Tool Developer",
+                "AI Educator"
+            ];
+
+            let currentTitleIndex = 0;
+            let currentCharIndex = 0;
+            const typewriterElement = document.getElementById("typewriter");
+
+            const typingSpeed = 150;
+            const erasingSpeed = 100;
+            const pauseAfterTyping = 2000;
+            const pauseAfterErasing = 500;
+
+            function type() {
+                const currentTitle = titles[currentTitleIndex];
+                if (currentCharIndex < currentTitle.length) {
+                    typewriterElement.textContent += currentTitle.charAt(currentCharIndex);
+                    currentCharIndex++;
+                    setTimeout(type, typingSpeed);
+                } else {
+                    setTimeout(erase, pauseAfterTyping);
+                }
+            }
+
+            function erase() {
+                if (currentCharIndex > 0) {
+                    typewriterElement.textContent = typewriterElement.textContent.slice(0, -1);
+                    currentCharIndex--;
+                    setTimeout(erase, erasingSpeed);
+                } else {
+                    currentTitleIndex = (currentTitleIndex + 1) % titles.length;
+                    setTimeout(type, pauseAfterErasing);
+                }
+            }
+
+            type();
+
+            // Project filtering
+            const navItems = document.querySelectorAll('.nav-item');
+            const mobileNav = document.getElementById('mobileNav');
+            
+            // Desktop navigation
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all
+                    navItems.forEach(i => i.classList.remove('active'));
+                    // Add active to clicked
+                    this.classList.add('active');
+                    // Get category from data-category
+                    const category = this.getAttribute('data-category');
+                    filterProjects(category);
+                });
+            });
+            
+            // Mobile navigation
+            mobileNav.addEventListener('change', function() {
+                const category = this.value;
+                filterProjects(category);
+                
+                // Also update the active state in the desktop nav
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('data-category') === category) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+            
+            // Filter projects function
+            function filterProjects(category) {
+                const projects = document.querySelectorAll('.project-card');
+                
+                projects.forEach(project => {
+                    if (category === 'all' || project.getAttribute('data-category') === category) {
+                        project.style.display = 'block';
+                    } else {
+                        project.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Initialize with all projects
+            filterProjects('all');
+            
+            // Load GitHub Calendar
+            GitHubCalendar(".calendar", "Shreya-Lal", { 
+                responsive: true,
+                tooltips: true,
+                global_stats: false
+            }).then(r => r);
+            
+            // Fetch GitHub stats
+            fetchGitHubStats();
+        });
+
+        // Function to fetch GitHub stats
+        async function fetchGitHubStats() {
+            try {
+                // Fetch user data
+                const userResponse = await fetch('https://api.github.com/users/Shreya-Lal');
+                const userData = await userResponse.json();
+                
+                // Update the stats cards with user data
+                document.getElementById('repo-count').textContent = userData.public_repos;
+                document.getElementById('follower-count').textContent = userData.followers;
+                
+                // For stars, we need to fetch all repos and sum up the stars
+                const reposResponse = await fetch('https://api.github.com/users/Shreya-Lal/repos?per_page=100');
+                const reposData = await reposResponse.json();
+                const stars = reposData.reduce((acc, repo) => acc + repo.stargazers_count, 0);
+                document.getElementById('star-count').textContent = stars;
+                
+                // For commits, we'll use a placeholder since getting total commits requires more complex API calls
+                // You can replace this with actual commit count if you have a way to get it
+                document.getElementById('commit-count').textContent = "100+"; // Placeholder
+            } catch (error) {
+                console.error('Error fetching GitHub data:', error);
+                // Fallback values if API fails
+                document.getElementById('repo-count').textContent = "20+";
+                document.getElementById('commit-count').textContent = "100+";
+                document.getElementById('star-count').textContent = "10+";
+                document.getElementById('follower-count').textContent = "10+";
+            }
+        }
+
+        // PDF Viewer Variables
+        let pdfDoc = null;
+        let pageNum = 1;
+        let pageRendering = false;
+        let pageNumPending = null;
+        let pdfInitialized = false;
+        const scale = 1.5;
+
+        // Initialize PDF Viewer
+        function initPDFViewer() {
+            // The workerSrc property shall be specified
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+            
+            // Load the PDF 
+            // Replace this with your actual PDF URL
+            const url = 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf';
+            
+            // Load the PDF document
+            pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+                pdfDoc = pdfDoc_;
+                document.getElementById('page-count').textContent = pdfDoc.numPages;
+                
+                // Initial page render
+                renderPage(pageNum);
+            }).catch(function(error) {
+                // Display error
+                const viewer = document.getElementById('pdf-viewer');
+                viewer.innerHTML = '<div class="error">Error loading PDF: ' + error.message + '</div>';
+            });
+            
+            // Event listeners for buttons
+            document.getElementById('prev-page').addEventListener('click', onPrevPage);
+            document.getElementById('next-page').addEventListener('click', onNextPage);
+            document.getElementById('download-resume').addEventListener('click', function(e) {
+                e.preventDefault();
+                // In a real app, this would point to your actual PDF file
+                const link = document.createElement('a');
+                link.href = url; // Updating url will update this URL
+                link.download = 'Shreya_Lal_Resume.pdf';
+                link.click();
+            });
+            document.getElementById('print-resume').addEventListener('click', function(e) {
+                e.preventDefault();
+                window.print();
+            });
+        }
+
+        // Render a PDF page
+        function renderPage(num) {
+            pageRendering = true;
+            
+            // Get the page
+            pdfDoc.getPage(num).then(function(page) {
+                const viewer = document.getElementById('pdf-viewer');
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                viewer.innerHTML = '';
+                viewer.appendChild(canvas);
+                
+                // Set canvas dimensions
+                const viewport = page.getViewport({ scale: scale });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                // Render the page
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                const renderTask = page.render(renderContext);
+                
+                // Update page number
+                document.getElementById('page-num').textContent = num;
+                
+                // Wait for rendering to finish
+                renderTask.promise.then(function() {
+                    pageRendering = false;
+                    
+                    // Render pending page if any
+                    if (pageNumPending !== null) {
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+                });
+            });
+        }
+
+        // Navigate to previous page
+        function onPrevPage() {
+            if (pageNum <= 1) return;
+            pageNum--;
+            queueRenderPage(pageNum);
+        }
+
+        // Navigate to next page
+        function onNextPage() {
+            if (pageNum >= pdfDoc.numPages) return;
+            pageNum++;
+            queueRenderPage(pageNum);
+        }
+
+        // Queue page rendering
+        function queueRenderPage(num) {
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
+            }
+        }    
+
+        // Create Hard Skills Bar Chart
+        function createHardSkillsChart() {
+            // Sample hard skills data
+            const skillsData = [
+                { skill: 'Python & Lib', level: 95 },
+                { skill: 'Neural Network', level: 94 },
+                { skill: 'CNN', level: 93 },
+                { skill: 'Object Detection', level: 80 },
+                { skill: 'Data Wrangling', level: 91 },
+                { skill: 'LLM', level: 93 },
+                { skill: 'Agents AI', level: 89 }
+            ];
+            
+            const container = d3.select('#hard-skills-chart');
+            const margin = { top: 20, right: 30, bottom: 40, left: 150 };
+            const width = 400 - margin.left - margin.right;
+            const height = 300 - margin.top - margin.bottom;
+            
+            const svg = container.append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+                .append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+            
+            // X scale
+            const x = d3.scaleLinear()
+                .domain([0, 100])
+                .range([0, width]);
+            
+            // Y scale
+            const y = d3.scaleBand()
+                .range([0, height])
+                .domain(skillsData.map(d => d.skill))
+                .padding(0.1);
+            
+            // Add X axis
+            svg.append('g')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(x).ticks(5))
+                .selectAll('text')
+                .style('font-size', '12px');
+            
+            // Add Y axis
+            svg.append('g')
+                .call(d3.axisLeft(y))
+                .selectAll('text')
+                .style('font-size', '14px')
+                .style('font-weight', '500');
+            
+            // Create gradient for bars
+            const gradient = svg.append('defs')
+                .append('linearGradient')
+                .attr('id', 'hard-bar-gradient')
+                .attr('x1', '0%')
+                .attr('y1', '0%')
+                .attr('x2', '100%')
+                .attr('y2', '0%');
+            
+            gradient.append('stop')
+                .attr('offset', '0%')
+                .attr('stop-color', '#3b82f6');
+                
+            gradient.append('stop')
+                .attr('offset', '100%')
+                .attr('stop-color', '#8b5cf6');
+            
+            // Add bars
+            const bars = svg.selectAll('rect')
+                .data(skillsData)
+                .enter()
+                .append('rect')
+                .attr('y', d => y(d.skill))
+                .attr('height', y.bandwidth())
+                .attr('width', 0) // Start from 0 for animation
+                .attr('fill', 'url(#hard-bar-gradient)')
+                .attr('rx', 4)
+                .attr('ry', 4);
+            
+            // Animate bars
+            bars.transition()
+                .duration(1000)
+                .delay((d, i) => i * 100)
+                .attr('width', d => x(d.level));
+            
+            // Add skill level text inside bars
+            svg.selectAll('.bar-text')
+                .data(skillsData)
+                .enter()
+                .append('text')
+                .attr('class', 'bar-text')
+                .attr('x', d => x(d.level) - 20)
+                .attr('y', d => y(d.skill) + y.bandwidth() / 2)
+                .attr('dy', '0.35em')
+                .attr('text-anchor', 'end')
+                .text(d => d.level + '%')
+                .style('fill', 'white')
+                .style('font-weight', '600')
+                .style('opacity', 0) // Start invisible
+                .transition()
+                .delay((d, i) => i * 100 + 500)
+                .duration(500)
+                .style('opacity', 1);
+        }
+
+        // Create Soft Skills Radar Chart with Hover Tooltips
+        function createSoftSkillsChart() {
+            // Sample hard skills data
+            const skillsData = [
+                { skill: 'Communication', level: 95 },
+                { skill: 'Teamwork', level: 93 },
+                { skill: 'Problem Solving', level: 94 },
+                { skill: 'Adaptability', level: 89 },
+                { skill: 'Time Management', level: 75 },
+                { skill: 'Ethical', level: 95 },
+                { skill: 'Mentoring', level: 90 },
+                { skill: 'Quick Learner', level: 90 }
+            ];
+            
+            const colors = [
+                '#2563eb', '#4f46e5', '#7c3aed', '#a855f7', 
+                '#d946ef', '#ec4899', '#f43f5e', '#8b5cf6'
+            ];
+            
+            const container = d3.select('#soft-skills-chart');
+            const tooltip = d3.select('#radar-tooltip');
+            const width = 400;
+            const height = 300;
+            const radius = Math.min(width, height) / 2 - 40;
+            
+            const svg = container.append('svg')
+                .attr('width', width)
+                .attr('height', height)
+                .append('g')
+                .attr('transform', `translate(${width/2},${height/2})`);
+            
+            // Create scales
+            const angleScale = d3.scaleLinear()
+                .domain([0, skillsData.length])
+                .range([0, Math.PI * 2]);
+            
+            const radiusScale = d3.scaleLinear()
+                .domain([0, 100])
+                .range([0, radius]);
+            
+            // Create radial lines
+            const radialAxis = svg.selectAll('.radial-axis')
+                .data(d3.range(0, 101, 20))
+                .enter().append('circle')
+                .attr('class', 'radial-axis')
+                .attr('r', d => radiusScale(d))
+                .style('fill', 'none')
+                .style('stroke', 'rgba(226, 232, 240, 0.5)')
+                .style('stroke-width', 1);
+            
+            // Create axes labels
+            svg.selectAll('.axis-label')
+                .data(d3.range(20, 101, 20))
+                .enter().append('text')
+                .attr('class', 'axis-label')
+                .attr('x', 0)
+                .attr('y', d => -radiusScale(d) - 5)
+                .attr('text-anchor', 'middle')
+                .text(d => d + '%')
+                .style('fill', '#64748b')
+                .style('font-size', '10px');
+            
+            // Draw the skill areas
+            const line = d3.lineRadial()
+                .angle((d, i) => angleScale(i))
+                .radius(d => radiusScale(d.level))
+                .curve(d3.curveLinearClosed);
+            
+            svg.append('path')
+                .datum(skillsData)
+                .attr('d', line)
+                .attr('fill', 'url(#soft-skill-gradient)')
+                .attr('fill-opacity', 0.3)
+                .attr('stroke', '#4f46e5')
+                .attr('stroke-width', 2)
+                .attr('stroke-dasharray', '1000')
+                .attr('stroke-dashoffset', '1000')
+                .transition()
+                .duration(2000)
+                .attr('stroke-dashoffset', '0');
+            
+            // Add gradient
+            const defs = svg.append('defs');
+            const gradient = defs.append('linearGradient')
+                .attr('id', 'soft-skill-gradient') 
+                .attr('x1', '0%')
+                .attr('y1', '0%')
+                .attr('x2', '100%')
+                .attr('y2', '100%');
+                
+            gradient.append('stop')
+                .attr('offset', '0%')
+                .attr('stop-color', '#2563eb');
+                
+            gradient.append('stop')
+                .attr('offset', '100%')
+                .attr('stop-color', '#8b5cf6');
+            
+            // Add skill labels
+            skillsData.forEach((d, i) => {
+                const angle = angleScale(i);
+                const labelRadius = radius + 25;
+                
+                svg.append('text')
+                    .attr('class', 'skill-label')
+                    .attr('x', Math.cos(angle - Math.PI/2) * labelRadius)
+                    .attr('y', Math.sin(angle - Math.PI/2) * labelRadius)
+                    .text(d.skill)
+                    .attr('text-anchor', 'middle')
+                    .attr('alignment-baseline', 'middle')
+                    .style('fill', '#1e293b')
+                    .style('font-weight', '600')
+                    .style('font-size', '12px');
+            });
+            
+            // Add data points with hover effects
+            const points = svg.selectAll('.data-point')
+                .data(skillsData)
+                .enter()
+                .append('circle')
+                .attr('class', 'data-point')
+                .attr('cx', (d, i) => {
+                    const angle = angleScale(i);
+                    return Math.cos(angle - Math.PI/2) * radiusScale(d.level);
+                })
+                .attr('cy', (d, i) => {
+                    const angle = angleScale(i);
+                    return Math.sin(angle - Math.PI/2) * radiusScale(d.level);
+                })
+                .attr('r', 0)
+                .attr('fill', (d, i) => colors[i % colors.length])
+                .attr('stroke', 'white')
+                .attr('stroke-width', 2)
+                .style('cursor', 'pointer')
+                .on('mouseover', function(event, d) {
+                    // Enlarge point
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr('r', 8);
+                    
+                    // Show tooltip
+                    tooltip
+                        .html(`<strong>${d.skill}</strong><br>${d.level}%`)
+                        .style('opacity', 1)
+                        .style('left', (event.pageX + 10) + 'px')
+                        .style('top', (event.pageY - 20) + 'px');
+                })
+                .on('mouseout', function() {
+                    // Shrink point
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr('r', 5);
+                    
+                    // Hide tooltip
+                    tooltip.style('opacity', 0);
+                })
+                .on('mousemove', function(event) {
+                    // Move tooltip with mouse
+                    tooltip
+                        .style('left', (event.pageX + 10) + 'px')
+                        .style('top', (event.pageY - 20) + 'px');
+                });
+            
+            // Animate points
+            points.transition()
+                .delay((d, i) => i * 200)
+                .duration(800)
+                .attr('r', 5);
+        }
+
+        // Create GitHub Activity Chart
+        function createGitHubChart() {
+            const container = d3.select('#github-chart');
+            const width = 800;
+            const height = 250;
+            const margin = { top: 40, right: 30, bottom: 40, left: 40 };
+            
+            // Generate mock GitHub activity data (last 30 days)
+            const data = [];
+            const today = new Date();
+            for (let i = 29; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(today.getDate() - i);
+                data.push({
+                    date: date,
+                    commits: Math.floor(Math.random() * 10) + 1,
+                    pullRequests: Math.floor(Math.random() * 4),
+                    issues: Math.floor(Math.random() * 3)
+                });
+            }
+            
+            const svg = container.append('svg')
+                .attr('width', width)
+                .attr('height', height)
+                .attr('viewBox', `0 0 ${width} ${height}`)
+                .attr('preserveAspectRatio', 'xMidYMid meet');
+            
+            const xScale = d3.scaleTime()
+                .domain(d3.extent(data, d => d.date))
+                .range([margin.left, width - margin.right]);
+            
+            const yScale = d3.scaleLinear()
+                .domain([0, d3.max(data, d => d.commits + 2)])
+                .range([height - margin.bottom, margin.top]);
+            
+            // Draw commits line
+            const line = d3.line()
+                .x(d => xScale(d.date))
+                .y(d => yScale(d.commits))
+                .curve(d3.curveMonotoneX);
+            
+            svg.append('path')
+                .datum(data)
+                .attr('fill', 'none')
+                .attr('stroke', '#8b5cf6')
+                .attr('stroke-width', 3)
+                .attr('d', line)
+                .attr('stroke-dasharray', '1000')
+                .attr('stroke-dashoffset', '1000')
+                .transition()
+                .duration(2000)
+                .attr('stroke-dashoffset', '0');
+            
+            // Draw area under commits line
+            const area = d3.area()
+                .x(d => xScale(d.date))
+                .y0(height - margin.bottom)
+                .y1(d => yScale(d.commits))
+                .curve(d3.curveMonotoneX);
+            
+            svg.append('path')
+                .datum(data)
+                .attr('fill', 'url(#github-gradient)')
+                .attr('opacity', 0.3)
+                .attr('d', area);
+            
+            // Add gradient for area
+            const defs = svg.append('defs');
+            const gradient = defs.append('linearGradient')
+                .attr('id', 'github-gradient')
+                .attr('x1', '0%')
+                .attr('y1', '0%')
+                .attr('x2', '0%')
+                .attr('y2', '100%');
+                
+            gradient.append('stop')
+                .attr('offset', '0%')
+                .attr('stop-color', '#8b5cf6');
+                
+            gradient.append('stop')
+                .attr('offset', '100%')
+                .attr('stop-color', '#4f46e5');
+            
+            // Add X axis
+            svg.append('g')
+                .attr('transform', `translate(0,${height - margin.bottom})`)
+                .call(d3.axisBottom(xScale).ticks(7))
+                .selectAll('text')
+                .style('fill', '#64748b')
+                .style('font-size', '12px');
+            
+            // Add Y axis
+            svg.append('g')
+                .attr('transform', `translate(${margin.left},0)`)
+                .call(d3.axisLeft(yScale).ticks(5))
+                .selectAll('text')
+                .style('fill', '#64748b')
+                .style('font-size', '12px');
+            
+            // Add title
+            svg.append('text')
+                .attr('x', width / 2)
+                .attr('y', margin.top - 10)
+                .attr('text-anchor', 'middle')
+                .style('fill', '#1e293b')
+                .style('font-weight', '600')
+                .text('GitHub Activity (Last 30 Days)');
+            
+            // Add dots
+            svg.selectAll('.dot')
+                .data(data)
+                .enter()
+                .append('circle')
+                .attr('cx', d => xScale(d.date))
+                .attr('cy', d => yScale(d.commits))
+                .attr('r', 4)
+                .attr('fill', '#8b5cf6')
+                .attr('stroke', 'white')
+                .attr('stroke-width', 2)
+                .style('opacity', 0)
+                .transition()
+                .delay((d, i) => i * 80)
+                .duration(500)
+                .style('opacity', 1);
+        }
+
+        // Create Technical Tools Carousel
+        function createToolsCarousel() {
+            // Technical Tools Data
+            const tools = [
+                { name: "Python", svg: `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="800px" height="800px" viewBox="0 0 32 32" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.0164 2C10.8193 2 9.03825 3.72453 9.03825 5.85185V8.51852H15.9235V9.25926H5.97814C3.78107 9.25926 2 10.9838 2 13.1111L2 18.8889C2 21.0162 3.78107 22.7407 5.97814 22.7407H8.27322V19.4815C8.27322 17.3542 10.0543 15.6296 12.2514 15.6296H19.5956C21.4547 15.6296 22.9617 14.1704 22.9617 12.3704V5.85185C22.9617 3.72453 21.1807 2 18.9836 2H13.0164ZM12.0984 6.74074C12.8589 6.74074 13.4754 6.14378 13.4754 5.40741C13.4754 4.67103 12.8589 4.07407 12.0984 4.07407C11.3378 4.07407 10.7213 4.67103 10.7213 5.40741C10.7213 6.14378 11.3378 6.74074 12.0984 6.74074Z" fill="url(#paint0_linear_87_8204)"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M18.9834 30C21.1805 30 22.9616 28.2755 22.9616 26.1482V23.4815L16.0763 23.4815L16.0763 22.7408L26.0217 22.7408C28.2188 22.7408 29.9998 21.0162 29.9998 18.8889V13.1111C29.9998 10.9838 28.2188 9.25928 26.0217 9.25928L23.7266 9.25928V12.5185C23.7266 14.6459 21.9455 16.3704 19.7485 16.3704L12.4042 16.3704C10.5451 16.3704 9.03809 17.8296 9.03809 19.6296L9.03809 26.1482C9.03809 28.2755 10.8192 30 13.0162 30H18.9834ZM19.9015 25.2593C19.1409 25.2593 18.5244 25.8562 18.5244 26.5926C18.5244 27.329 19.1409 27.9259 19.9015 27.9259C20.662 27.9259 21.2785 27.329 21.2785 26.5926C21.2785 25.8562 20.662 25.2593 19.9015 25.2593Z" fill="url(#paint1_linear_87_8204)"/>
+                    <defs>
+                    <linearGradient id="paint0_linear_87_8204" x1="12.4809" y1="2" x2="12.4809" y2="22.7407" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#327EBD"/>
+                    <stop offset="1" stop-color="#1565A7"/>
+                    </linearGradient>
+                    <linearGradient id="paint1_linear_87_8204" x1="19.519" y1="9.25928" x2="19.519" y2="30" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#FFDA4B"/>
+                    <stop offset="1" stop-color="#F9C600"/>
+                    </linearGradient>
+                    </defs>
+                    </svg>
+                `},
+                { name: "Jupyter Notebook", svg:`
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><path d="M109.766 7.281a7.691 7.691 0 01-1.09 4.282 7.583 7.583 0 01-3.262 2.949 7.49 7.49 0 01-4.34.62 7.525 7.525 0 01-3.953-1.913A7.642 7.642 0 0195.137 5a7.606 7.606 0 012.629-3.531 7.509 7.509 0 014.136-1.461 7.51 7.51 0 015.422 1.996 7.627 7.627 0 012.438 5.273zm0 0" fill="#767677"/><path d="M65.758 96.79c-20.098 0-37.649-7.364-46.766-18.267a49.95 49.95 0 0018.102 24.254 49.251 49.251 0 0028.676 9.215 49.279 49.279 0 0028.675-9.215 49.917 49.917 0 0018.094-24.254C103.406 89.426 85.855 96.79 65.758 96.79zm0 0M65.75 25.883c20.098 0 37.652 7.367 46.766 18.265a49.95 49.95 0 00-18.102-24.253 49.27 49.27 0 00-28.672-9.22 49.27 49.27 0 00-28.672 9.22A49.909 49.909 0 0018.97 44.148C28.102 33.27 45.652 25.883 65.75 25.883zm0 0" fill="#f37726"/><path d="M38.164 117.984a9.671 9.671 0 01-1.371 5.399 9.5 9.5 0 01-9.59 4.504 9.405 9.405 0 01-4.98-2.418 9.671 9.671 0 01-2.809-4.797 9.73 9.73 0 01.313-5.567 9.624 9.624 0 013.328-4.453 9.466 9.466 0 0112.043.688 9.63 9.63 0 013.066 6.648zm0 0" fill="#989798"/><path d="M21.285 23.418a5.53 5.53 0 01-3.14-.816 5.627 5.627 0 01-2.618-5.672 5.612 5.612 0 011.407-2.95 5.593 5.593 0 012.789-1.664 5.46 5.46 0 013.238.184 5.539 5.539 0 012.586 1.969 5.66 5.66 0 01-.399 7.129 5.557 5.557 0 01-3.867 1.82zm0 0" fill="#6f7070"/>
+                    </svg>
+                `},
+                { name: "TensorFlow", svg: `
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800px" height="800px" viewBox="-9 0 274 274" version="1.1" preserveAspectRatio="xMidYMid">
+		            <g>
+				    <path d="M145.726081,42.0651946 L145.726081,84.1347419 L218.586952,126.204312 L218.586952,84.1347419 L145.726081,42.0651946 Z M-1.98726454e-07,84.1347419 L-1.98726454e-07,126.204312 L36.4304238,147.234755 L36.4304238,105.169527 L-1.98726454e-07,84.1347419 Z M109.291294,105.169527 L72.8608701,126.204312 L72.8608701,252.404316 L109.291294,273.439101 L109.291294,189.304303 L145.726081,210.339088 L145.726081,168.26954 L109.291294,147.234755 L109.291294,105.169527 Z" fill="#E55B2D">
+                    </path>
+                    <path d="M145.726081,42.0651946 L36.4304238,105.169527 L36.4304238,147.234755 L109.291294,105.169527 L109.291294,147.234755 L145.726081,126.204312 L145.726081,42.0651946 Z M255.021717,63.0999794 L218.586952,84.1347419 L218.586952,126.204312 L255.021717,105.169527 L255.021717,63.0999794 Z M182.156505,147.234755 L145.726081,168.26954 L145.726081,210.339088 L182.156505,189.304303 L182.156505,147.234755 Z M145.726081,210.339088 L109.291294,189.304303 L109.291294,273.439101 L145.726081,252.404316 L145.726081,210.339088 Z" fill="#ED8E24">
+                    </path>
+                    <path d="M145.726081,-3.41864288e-05 L-1.98726454e-07,84.1347419 L36.4304238,105.169527 L145.726081,42.0651946 L218.586952,84.1347419 L255.021717,63.0999794 L145.726081,-3.41864288e-05 Z M145.726081,126.204312 L109.291294,147.234755 L145.726081,168.26954 L182.156505,147.234755 L145.726081,126.204312 Z" fill="#F8BF3C">
+                    </path>
+                    </g>
+                    </svg>
+                `},
+                { name: "PyTorch", svg: `
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800px" height="800px" viewBox="-27 0 310 310" version="1.1" preserveAspectRatio="xMidYMid">
+    <g>
+        <path d="M218.281037,90.106412 C268.572988,140.398363 268.572988,221.075034 218.281037,271.716235 C169.036835,322.008186 88.0109141,322.008186 37.7189632,271.716235 C-12.5729877,221.424284 -12.5729877,140.398363 37.7189632,90.106412 L127.825375,0 L127.825375,45.053206 L119.443383,53.4351978 L59.7216917,113.156889 C22.0027285,150.177353 22.0027285,210.946794 59.7216917,248.665757 C96.7421555,286.38472 157.511596,286.38472 195.230559,248.665757 C232.949523,211.645293 232.949523,150.875853 195.230559,113.156889 L218.281037,90.106412 Z M173.227831,84.5184175 C163.969338,84.5184175 156.463847,77.0129263 156.463847,67.7544338 C156.463847,58.4959413 163.969338,50.9904502 173.227831,50.9904502 C182.486323,50.9904502 189.991814,58.4959413 189.991814,67.7544338 C189.991814,77.0129263 182.486323,84.5184175 173.227831,84.5184175 Z" fill="#EE4C2C">
+
+</path>
+    </g>
+</svg>
+                `},
+                { name: "scikit-learn", svg: `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><path fill="#f89939" d="M98.18 88.13c15.63-15.62 18.23-38.36 5.8-50.78-12.43-12.42-35.17-9.82-50.8 5.8-15.63 15.62-11.11 45.48-5.8 50.78 4.29 4.29 35.17 9.82 50.8-5.8Z"/><path fill="#3499cd" d="M34.04 65.56c-9.07-9.06-22.27-10.57-29.48-3.37-7.21 7.21-5.7 20.4 3.37 29.46 9.07 9.07 26.4 6.44 29.48 3.37 2.49-2.49 5.71-20.4-3.37-29.46Z"/><path fill="#010101" d="M123.82 85.68c-.58 0-.87-.35-.87-1.06 0-.53.35-1.69 1.04-3.46 1.01-2.59 1.52-4.45 1.52-5.58 0-.68-.2-1.25-.6-1.7-.4-.45-.9-.68-1.5-.68-.88 0-1.89.41-3.03 1.24-1.14.83-2.67 2.32-4.6 4.48.28-1.4.88-3.32 1.78-5.76l-4.31.83c-.98 2.12-1.69 4.03-2.13 5.73-.22.83-.38 1.69-.49 2.56-1.35 1.31-2.23 2.1-2.61 2.39-.39.29-.8.43-1.22.43-.39 0-.7-.15-.93-.44-.23-.29-.34-.69-.34-1.18 0-.53.1-1.14.3-1.83s.64-1.99 1.33-3.9l1.64-4.52-1.61.07c-1.46 2.78-3.17 4.28-5.13 4.49.53-1.38.8-2.44.8-3.18 0-.94-.46-1.41-1.38-1.41-1.09 0-1.94.51-2.55 1.54-.62 1.03-.93 2-.93 2.91s.51 1.55 1.52 2c-.66.97-1.4 1.88-2.2 2.74-.95.94-1.69 1.66-2.23 2.13-.55.49-1.06.73-1.52.73-.72 0-1.08-.51-1.08-1.52s.4-2.75 1.2-5.35l1.56-5.18h-.99l-3.61 2c-.59-1.35-1.62-2.03-3.09-2.03-1.17 0-2.51.5-4.03 1.49-1.52.99-2.77 2.28-3.74 3.89-.75 1.24-1.21 2.54-1.38 3.88-1.36 1.36-2.38 2.24-3.06 2.65-.71.42-1.45.63-2.23.63-1.99 0-3.22-1.15-3.69-3.45 5.19-1.52 7.78-3.5 7.78-5.94 0-.92-.33-1.66-.99-2.23-.66-.57-1.54-.85-2.63-.85-2.11 0-4.03 1.01-5.76 3.03-1.57 1.83-2.42 3.86-2.57 6.09-1.43 1.41-2.51 2.34-3.21 2.79-.72.46-1.4.69-2.03.69s-1.13-.3-1.5-.9c-.38-.6-.57-1.41-.57-2.44 0-.46.05-1.3.14-2.53 2.36-2.56 4.09-4.96 5.2-7.21 1.11-2.25 1.66-4.58 1.66-6.98 0-.85-.11-1.52-.33-2.02-.22-.5-.5-.75-.84-.75-.07 0-.18.02-.32.07l-4.49 1.66c-1.53 2.92-2.84 6.11-3.91 9.58-1.07 3.46-1.61 6.43-1.61 8.9 0 1.65.38 2.96 1.16 3.94.77.98 1.79 1.47 3.05 1.47 1.1 0 2.25-.35 3.46-1.05 1.21-.7 2.61-1.79 4.22-3.26s0-.02 0-.02c.19 1.11.65 2.04 1.37 2.8.99 1.02 2.28 1.54 3.88 1.54 1.44 0 2.75-.35 3.94-1.05 1.15-.67 2.44-1.72 3.88-3.11.12 1.04.46 1.94 1.03 2.71.73.97 1.61 1.46 2.64 1.46s2.09-.4 3.09-1.2c1-.8 2.08-2.05 3.26-3.73-.11 3.29.77 4.93 2.63 4.93.74 0 1.52-.27 2.33-.81s2.16-1.71 4.05-3.5c1.64-1.62 2.84-3.14 3.61-4.56 1.04-.18 1.99-.49 2.86-.94-1.78 2.79-2.67 5.02-2.67 6.68 0 .9.25 1.65.74 2.25.49.6 1.1.91 1.82.91 1.57 0 3.8-1.41 6.68-4.2 0 .22-.02.43-.02.65 0 .78.07 1.96.19 3.55l3.91-.92c0-1.06.02-1.9.05-2.53.06-.84.18-1.76.35-2.76.11-.59.38-1.15.81-1.68l.99-1.15c.36-.42.71-.8 1.02-1.13.37-.39.7-.72.99-.99.33-.29.62-.53.87-.69.27-.16.49-.25.65-.25.29 0 .44.19.44.57s-.28 1.26-.83 2.65c-1.04 2.59-1.56 4.52-1.56 5.78 0 .93.24 1.67.73 2.23.48.55 1.12.83 1.91.83 1.94 0 4.28-1.44 7-4.31V82.3c-1.93 2.27-3.32 3.41-4.18 3.41Zm-65.26-8.29c.8-3.91 1.62-6.94 2.45-9.11.83-2.17 1.47-3.26 1.9-3.26.2 0 .37.13.5.4.13.26.19.62.19 1.05 0 1.49-.46 3.26-1.4 5.33-.93 2.06-2.15 3.93-3.64 5.59Zm11.79-.98c.71-1.19 1.45-1.78 2.23-1.78.82 0 1.24.57 1.24 1.7 0 2.29-1.51 3.85-4.53 4.7 0-1.9.35-3.44 1.06-4.62Zm17.48 5.85c-1.04 2.01-2.16 3.01-3.33 3.01-.48 0-.88-.2-1.19-.59-.31-.39-.47-.91-.47-1.55 0-1.68.53-3.53 1.58-5.53 1.05-2 2.17-3 3.35-3 .49 0 .89.18 1.18.56.29.37.44.89.44 1.55 0 1.7-.52 3.55-1.56 5.56Z"/><path fill="#fff" d="M75.46 64.88c.15.21.22.48.22.8s-.09.61-.27.88-.44.49-.79.64c-.34.15-.73.23-1.16.23-.72 0-1.26-.15-1.64-.45s-.62-.74-.72-1.33l.93-.15c.05.37.2.66.43.85.24.2.57.3 1 .3s.75-.09.96-.26c.21-.17.31-.38.31-.62 0-.21-.09-.38-.28-.5-.13-.08-.45-.19-.96-.32-.69-.17-1.16-.32-1.43-.45s-.47-.3-.6-.53-.21-.47-.21-.74c0-.25.06-.47.17-.68.11-.21.27-.38.46-.52.15-.11.34-.2.59-.27.25-.07.52-.11.81-.11.43 0 .81.06 1.14.19.33.12.57.29.73.51.16.21.26.5.32.86l-.92.12c-.04-.28-.16-.51-.36-.67-.2-.16-.48-.24-.85-.24-.43 0-.74.07-.92.21-.18.14-.28.31-.28.5 0 .12.04.23.11.33.08.1.2.18.36.25.09.03.37.11.83.24.66.18 1.12.32 1.39.43.26.11.47.28.62.49Zm4.47 1.44c-.25.23-.55.34-.92.34-.46 0-.83-.17-1.11-.5s-.43-.88-.43-1.62.15-1.27.44-1.6.68-.51 1.15-.51c.31 0 .58.09.8.28.22.19.37.47.46.84l.91-.14c-.11-.56-.35-.99-.73-1.29-.38-.3-.87-.45-1.47-.45-.48 0-.91.11-1.32.34-.4.22-.71.56-.9 1.01-.2.45-.3.97-.3 1.57 0 .92.23 1.63.69 2.12.46.49 1.07.74 1.82.74.6 0 1.11-.18 1.53-.54.41-.36.67-.86.77-1.49l-.92-.12c-.07.47-.22.81-.47 1.04Zm2.19.98h.94v-5.52h-.94v5.52Zm0-6.55h.94v-1.08h-.94v1.08Zm6.73 1.02h-1.21l-2.22 2.25v-4.35h-.94v7.62h.94V65.1l.66-.63 1.83 2.82h1.16l-2.33-3.47 2.11-2.05Zm.96-1.02h.94v-1.08h-.94v1.08Zm0 6.55h.94v-5.52h-.94v5.52Zm4.41-.84c-.17.02-.31.04-.41.04-.14 0-.25-.02-.32-.07s-.13-.11-.16-.18c-.03-.08-.05-.25-.05-.51v-3.23h.94v-.73h-.94v-1.93l-.93.56v1.37h-.69v.73h.69v3.18c0 .56.04.93.11 1.1.08.18.21.32.39.42.19.11.45.16.79.16.21 0 .44-.03.71-.08l-.14-.83Z"/></svg>
+                `},
+                { name: "Pandas", svg: `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+                        <path style="-inkscape-stroke:none" d="M48.697 15.176h12.25v25.437h-12.25zm0 52.251h12.25v25.436h-12.25z" color="#000" fill="#130754"/>
+                        <path style="-inkscape-stroke:none" d="M48.697 48.037h12.25v12.001h-12.25z" color="#000" fill="#ffca00"/>
+                        <path style="-inkscape-stroke:none" d="M29.017 36.087h12.25v84.552h-12.25zM67.97 88.414h12.25v25.436H67.97zm0-52.297h12.25v25.437H67.97z" color="#000" fill="#130754"/>
+                        <path style="-inkscape-stroke:none" d="M67.97 68.983h12.25v12.001H67.97z" color="#000" fill="#e70488"/>
+                        <path style="-inkscape-stroke:none" d="M87.238 8.55h12.25v84.552h-12.25z" color="#000" fill="#130754"/>
+                        </svg>
+                `},
+                { name: "NumPy", svg: `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><path d="M54.32 27.164L33.304 16.559 10.226 28.071l21.594 10.84zM63.961 32.031L86 43.16 63.137 54.637 41.512 43.782zM93.398 16.715l22.645 11.355-20.254 10.168-22.082-11.141zM83.652 11.824L63.265 1.601 43.101 11.667l21.008 10.59zM67.715 99.605v27.816l24.695-12.324-.023-27.828zM92.375 77.555l-.027-27.535-24.633 12.246v27.547zM122.02 72.398v27.926l-21.066 10.508-.016-27.797zM122.02 62.633V35.266l-21.105 10.492.016 27.59z" color="#000" fill="#4cabcf" style="-inkscape-stroke:none"/><path d="M58.996 62.266l-16.629-8.367v36.14S22.019 46.756 20.14 42.865c-.242-.504-1.242-1.051-1.496-1.188-3.668-1.914-14.355-7.324-14.355-7.324v63.871l14.785 7.926V72.75s20.129 38.676 20.336 39.102c.21.422 2.219 4.492 4.383 5.926 2.87 1.906 15.195 9.316 15.195 9.316z" color="#000" fill="#4c75cf" style="-inkscape-stroke:none"/></svg>
+                `},
+                { name: "Matplotlib", svg: `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><path fill="#fff" d="M63.975 125.09c-16.317 0-31.658-6.355-43.197-17.893S2.885 80.318 2.885 64 9.24 32.341 20.778 20.803 47.657 2.91 63.975 2.91s31.659 6.355 43.198 17.893S125.065 47.682 125.065 64s-6.355 31.659-17.893 43.198-26.879 17.892-43.197 17.892z"/><path fill="none" stroke="#858585" stroke-dasharray=".407,.8139" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="7.976" stroke-width=".856" d="M63.974 63.784h61.09m-61.09 0 43.197-43.196M63.974 63.784V2.694m0 61.09L20.778 20.588m43.196 43.196H2.884m61.09 0-43.196 43.197m43.196-43.197v61.09m0-61.09 43.197 43.197" opacity=".9"/><g fill="none" stroke="#818181" stroke-dasharray=".407,.8139" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="199.409" stroke-width=".856"><path d="m70.764 63.784-.202-1.643-.593-1.543-.949-1.355-1.25-1.085-1.474-.751-1.61-.373-1.654.03-1.599.429-1.447.801-1.209 1.128-.9 1.388-.539 1.565-.145 1.649.259 1.634.646 1.523.994 1.321 1.286 1.041 1.5.698 1.623.316 1.653-.086 1.582-.484 1.418-.852 1.17-1.17.851-1.417.484-1.582.105-1.182h0" opacity=".9"/><path d="m84.339 63.784-.198-2.833-.59-2.779-.973-2.669-1.333-2.509-1.67-2.299-1.973-2.044-2.238-1.75-2.461-1.42-2.633-1.064-2.758-.688-2.825-.297-2.84.099-2.797.494-2.702.877-2.554 1.246-2.356 1.588-2.111 1.901-1.826 2.177-1.506 2.408-1.155 2.596-.782 2.73-.396 2.814v2.842l.396 2.814.782 2.73 1.155 2.596 1.506 2.408 1.826 2.177 2.111 1.902 2.356 1.588 2.554 1.245 2.702.877 2.798.494 2.84.1 2.824-.298 2.758-.687 2.633-1.065 2.461-1.42 2.238-1.75 1.973-2.044 1.67-2.299 1.333-2.51.972-2.668.591-2.779.198-2.83h0" opacity=".9"/><path d="m97.914 63.784-.185-3.548-.555-3.509-.92-3.43-1.272-3.317-1.613-3.166-1.935-2.978-2.236-2.762-2.512-2.511-2.761-2.236-2.979-1.935-3.165-1.613-3.317-1.273-3.43-.919-3.51-.555-3.548-.185-3.548.185-3.508.555-3.43.92-3.318 1.272-3.165 1.613-2.979 1.935-2.761 2.236-2.512 2.511-2.236 2.762-1.935 2.978-1.613 3.166-1.273 3.317-.919 3.43-.555 3.509-.185 3.548.185 3.548.555 3.509.92 3.43 1.272 3.317 1.613 3.166 1.935 2.978 2.236 2.762 2.512 2.511 2.761 2.236 2.979 1.935 3.165 1.614 3.317 1.272 3.43.92 3.51.555 3.547.185 3.549-.185 3.508-.556 3.43-.919 3.318-1.272 3.165-1.614 2.979-1.935 2.761-2.236 2.512-2.511 2.236-2.762 1.935-2.978 1.613-3.166 1.272-3.317.92-3.43.555-3.509.185-3.548h0" opacity=".9"/><path d="m111.489 63.784-.26-4.966-.78-4.911-1.286-4.804-1.782-4.642-2.257-4.432-2.709-4.171-3.13-3.866-3.516-3.517-3.866-3.13-4.171-2.709L83.3 20.38l-4.642-1.781-4.804-1.287-4.912-.779-4.966-.26-4.966.26-4.91.779-4.805 1.287-4.642 1.781-4.432 2.257-4.17 2.71-3.867 3.13-3.517 3.516-3.13 3.866-2.708 4.17-2.257 4.433-1.782 4.642-1.287 4.804-.778 4.911-.261 4.966.26 4.966.779 4.911 1.287 4.805 1.782 4.642 2.257 4.431 2.709 4.171 3.13 3.866 3.516 3.517 3.866 3.13 4.171 2.709 4.432 2.257 4.642 1.781 4.804 1.288 4.911.778 4.966.26 4.966-.26 4.912-.778 4.804-1.288 4.642-1.781 4.432-2.257 4.17-2.71 3.867-3.129 3.516-3.517 3.13-3.866 2.71-4.17 2.256-4.432 1.782-4.642 1.287-4.805.778-4.91.261-4.967h0" opacity=".9"/></g><path fill="#11557c" d="M64 126c-16.56 0-32.13-6.449-43.84-18.159S2 80.561 2 64s6.449-32.13 18.159-43.841S47.439 2 64 2s32.131 6.449 43.841 18.159S126 47.439 126 64s-6.449 32.131-18.159 43.841S80.561 126 64 126zM64 3.82c-16.074 0-31.187 6.26-42.553 17.626C10.08 32.813 3.82 47.925 3.82 64c0 16.075 6.26 31.188 17.626 42.554S47.925 124.18 64 124.18c16.075 0 31.188-6.26 42.554-17.626S124.18 80.075 124.18 64c0-16.075-6.26-31.187-17.626-42.554C95.187 10.08 80.075 3.82 64 3.82z"/><path fill="#004cff" d="m63.975 63.784.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.129-.042.025.046.013.041.013.041.013.041.013.041.013.041.012.041.012.041.011.039.012.041.012.041.012.041.012.041.011.041.011.041.011.041.011.041.011.041.011.041.011.041.011.041.01.041.01.041.01.041.01.041.01.041.01.042.01.042.009.042.009.042.009.042.009.042.009.042.009.042.009.042.009.042.009.042.008.042.008.042.008.042.008.042.008.042.008.042.007.042.007.042.007.042.007.042.007.042.007.042.007.042.007.042.007.042.006.042.006.042.006.042.006.042.006.042.006.042.006.042.005.042.005.042.005.042.005.042.005.042.005.042.005.042.005.042.004.042.004.042.004.042.004.042.004.042.004.042.004.043.003.043.003.043.003.043.003.043.003.043.003.043.003.043.003.043.002.043.002.043.002.043.002.043.002.043.002.043.002.043.001.043.001.043.001.043.001.043.001.043.001.043.001.043v.172H64.11l-.135-.004z" opacity=".6"/><path fill="#ceff29" d="m63.975 63.784.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.143-.381.154-.411.143-.381.143-.381.12.045.12.046.119.046.119.046.119.047.119.047.119.047.119.048.119.048.118.049.118.049.118.049.118.05.118.05.118.05.117.051.117.051.117.051.117.052.117.052.117.053.116.053.116.053.116.054.116.054.116.054.116.055.115.055.115.055.115.056.115.056.115.057.115.057.114.057.114.058.114.058.114.058.114.059.113.059.113.059.113.06.113.06.113.061.113.061.112.061.112.062.112.062.112.062.112.063.111.063.111.063.111.064.111.064.111.064.11.065.11.065.11.065.11.066.11.066.109.066.109.067.109.067.109.067.108.068.108.068.108.068.108.069.108.069.107.069.107.07.107.07.107.071.107.071.106.071.106.072.106.072.106.072.105.073.105.073.105.073.105.074.104.074.104.074.104.074.104.075.104.075.103.075.103.076.103.076.103.076.102.077.102.077.102.077.102.078.101.078.101.078.101.079.101.079.1.079.1.08-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.252.324-.254.318-.254.318-.254.318-.254.318-.254.318-.253.32-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.252.332-.254.318-.254.318-.254.318-.254.318-.254.318-.254.32-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.252.328-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.254.318-.253.326z" opacity=".6"/><path fill="#ff6800" d="m63.975 63.784-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.349-.403-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417-.348-.417.197-.164.198-.163.198-.162.199-.161.2-.16.201-.159.201-.158.202-.157.203-.156.204-.155.204-.154.205-.153.206-.152.206-.151.207-.15.208-.149.209-.148.209-.147.21-.146.211-.145.211-.144.212-.143.213-.142.213-.141.214-.14.215-.139.215-.138.216-.137.217-.136.217-.135.218-.134.219-.133.219-.132.22-.131.22-.13.221-.129.222-.128.222-.127.223-.126.223-.125.224-.124.225-.123.225-.122.226-.121.226-.12.227-.118.227-.117.228-.116.228-.115.229-.114.23-.113.23-.112.231-.111.231-.11.232-.109.232-.108.233-.107.233-.105.234-.104.234-.103.235-.102.235-.101.236-.1.236-.099.237-.098.237-.097.237-.095.238-.094.238-.093.239-.092.239-.091.24-.09.24-.089.24-.088.241-.086.241-.085.242-.084.242-.083.242-.082.243-.081.243-.08.244-.078.244-.077.244-.076.245-.075.245-.074.245-.073.246-.072.246-.07.246-.069.247-.068.247-.067.247-.066.248-.065.248-.063.248-.062.249-.061.249-.06.249-.059.249-.058.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.113.543.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.121.529.11.556z" opacity=".6"/><path fill="#ffc400" d="m63.975 63.784-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.463.083-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.462.083-.468.085-.468.085-.468.085-.466.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.456.081-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.45.079-.468.085-.468.085-.468.085-.466.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.468.085-.052-.294-.051-.294-.049-.295-.047-.295-.045-.295-.038-.297-.041-.296-.039-.296-.038-.296-.036-.296-.034-.297-.032-.297-.03-.297-.028-.297-.026-.297-.024-.298-.023-.298-.021-.298-.019-.298-.017-.298-.015-.298-.013-.298-.011-.298-.009-.298-.008-.298-.006-.298-.004-.299-.002-.299v-.299l.002-.299.004-.299.005-.298.007-.298.009-.298.011-.298.013-.298.015-.298.017-.298.019-.298.02-.298.022-.298.024-.298.026-.297.028-.297.03-.297.032-.297.034-.297.035-.296.037-.296.039-.296.041-.296.043-.295.045-.295.047-.295.048-.295.05-.294.052-.294.054-.294.056-.293.058-.293.059-.293.061-.292.063-.292.065-.291.067-.291.069-.291.07-.29.072-.29.074-.289.076-.289.078-.288.08-.288.081-.287.083-.287.085-.286.087-.286.089-.285.09-.285.092-.284.094-.283.096-.283.097-.282.099-.282.101-.281.103-.28.105-.28.106-.279.108-.278.11-.278.112-.277.113-.276.115-.276.117-.275.118-.274.12-.273.122-.273.124-.272.125-.271.127-.27.129-.269.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.428.206.436.223z" opacity=".6"/><path fill="#29ffce" d="m63.975 63.784-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.224.151-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.232.137-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.223.155-.231.138-.223.155-.024-.035-.024-.035-.024-.035-.024-.035-.024-.035-.024-.035-.024-.035-.024-.035-.024-.035-.024-.035-.024-.035-.024-.035-.024-.036-.024-.036-.023-.036-.023-.036-.023-.036-.023-.036-.023-.036-.023-.036-.023-.036-.023-.036-.023-.036-.023-.036-.023-.036-.023-.036-.023-.036-.023-.036-.023-.036-.023-.036-.023-.036-.023-.036-.022-.036-.022-.036-.022-.036-.022-.036-.022-.036-.022-.036-.022-.036-.022-.036-.022-.037-.022-.037-.022-.037-.022-.037-.022-.037-.022-.037-.022-.037-.022-.037-.022-.037-.021-.037-.021-.037-.021-.037-.021-.037-.021-.037-.021-.037-.021-.037-.021-.037-.021-.037-.021-.037-.021-.037-.021-.037-.021-.037-.021-.037-.021-.037-.021-.037-.021-.037-.021-.037-.02-.037-.02-.037-.02-.037-.02-.038-.02-.038-.02-.038-.02-.038-.02-.038-.02-.038-.02-.038-.02-.038-.02-.038-.02-.038-.02-.038-.02-.038-.02-.038-.019-.038-.019-.038-.019-.038-.019-.038-.019-.038-.019-.038-.019-.038-.019-.038-.019-.038-.019-.038-.019-.038-.019-.038-.019-.038-.019-.038-.019-.041-.019-.038-.019-.038.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.245-.118.208-.098z" opacity=".6"/><path fill="#7dff7a" d="m63.975 63.784.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335.057.335-.131.022-.132.022-.132.021-.132.021-.132.02-.132.019-.132.019-.132.018-.132.018-.132.017-.132.017-.132.016-.132.016-.132.015-.132.015-.132.014-.133.014-.133.013-.133.013-.133.012-.133.012-.133.011-.133.011-.133.01-.133.01-.133.009-.133.009-.133.008-.133.007-.133.007-.133.007-.133.006-.133.005-.133.005-.133.004-.133.004-.133.003-.133.003-.133.002-.133.002-.133.001-.133.001h-.266l-.133-.001-.133-.001-.133-.002-.133-.002-.133-.003-.133-.003-.133-.004-.153-.047-.133-.005-.133-.005-.133-.006-.133-.007-.134-.007-.133-.008-.133-.008-.133-.009-.133-.009-.133-.01-.133-.01-.133-.011-.133-.011-.133-.012-.133-.012-.133-.013-.133-.013-.133-.014-.132-.015-.13-.015-.132-.015-.132-.016-.132-.017-.132-.017-.132-.018-.132-.018-.132-.019-.132-.019-.132-.02-.132-.02-.132-.021-.132-.021-.131-.022-.131-.022-.131-.023-.131-.023-.131-.024-.131-.024-.131-.025-.131-.025-.131-.026-.131-.026-.131-.027-.13-.027-.13-.028-.13-.028-.13-.029-.13-.029.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.076-.331.027-.318z" opacity=".6"/><path fill="#ff6800" d="m63.975 63.784.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.433.33.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334.428.334-.079.101-.079.101-.079.1-.079.1-.08.1-.08.1-.08.1-.08.1-.081.099-.081.099-.081.099-.081.099-.082.099-.082.098-.082.098-.082.098-.083.098-.083.098-.083.097-.083.097-.083.097-.084.097-.084.097-.084.096-.084.096-.085.096-.085.096-.085.096-.085.095-.085.095-.086.095-.086.095-.086.095-.086.094-.087.094-.087.094-.087.094-.087.094-.087.093-.088.093-.088.093-.088.093-.088.093-.089.092-.089.092-.089.092-.089.092-.089.092-.09.091-.09.091-.09.091-.09.091-.09.09-.091.09-.091.09-.091.09-.091.09-.092.089-.092.089-.092.089-.092.089-.092.089-.093.088-.093.088-.093.088-.093.088-.093.087-.094.087-.094.087-.094.087-.094.087-.094.086-.068.066-.095.086-.095.086-.095.085-.095.085-.096.085-.096.085-.096.084-.096.084-.096.084-.097.084-.097.084-.097.083-.097.083-.097.083-.098.083-.098.082-.098.082-.098.082-.098.082-.099.082-.099.081-.099.081-.099.081-.099.081-.1.08-.1.08-.1.08-.339-.425-.338-.424-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.33-.414-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.339-.425-.307-.391z" opacity=".6"/><path fill="#2c2c2c" d="m77.551 64.198-13.576-.001a.414.414 0 0 1-.128-.806l12.912-4.194a.413.413 0 0 1 .521.265c.455 1.398.685 2.853.684 4.323a.413.413 0 0 1-.413.413zm-10.965-.828h10.545a13.114 13.114 0 0 0-.516-3.258L66.586 63.37z"/><path fill="#2c2c2c" d="M63.975 64.197a.414.414 0 0 1-.387-.558L77.899 25.51a.412.412 0 0 1 .532-.242 41 41 0 0 1 11.196 6.351.414.414 0 0 1 .066.581L64.298 64.041a.415.415 0 0 1-.323.156zm14.552-38.008L65.28 61.484l23.507-29.475a40.163 40.163 0 0 0-10.26-5.82z"/><path fill="#2c2c2c" d="M63.975 64.197a.415.415 0 0 1-.317-.148L28.857 22.364a.412.412 0 0 1 .052-.582A54.784 54.784 0 0 1 51.801 10.44a.414.414 0 0 1 .495.312l12.083 52.941a.415.415 0 0 1-.22.463.444.444 0 0 1-.184.041zM29.757 22.152l33.431 40.044-11.607-50.857a53.967 53.967 0 0 0-21.824 10.813z"/><path fill="#2c2c2c" d="M17.224 72.681a.413.413 0 0 1-.406-.339c-1.813-9.884-.401-20.309 3.977-29.355a.414.414 0 0 1 .552-.193l42.808 20.615a.413.413 0 0 1-.106.78l-46.75 8.485a.318.318 0 0 1-.075.007zm4.136-28.96c-4.103 8.678-5.448 18.61-3.801 28.067l45.09-8.183L21.36 43.721z"/><path fill="#2c2c2c" d="M41.657 79.659a.42.42 0 0 1-.341-.178 27.673 27.673 0 0 1-2.177-3.738.413.413 0 0 1 .193-.552l24.462-11.78a.413.413 0 0 1 .415.713L41.893 79.586a.414.414 0 0 1-.236.073zm-1.59-3.904a27.058 27.058 0 0 0 1.697 2.913L59.42 66.436l-19.353 9.319z"/><path fill="#2c2c2c" d="M63.99 98.132c-2.58 0-5.165-.287-7.66-.857a.415.415 0 0 1-.311-.496l7.552-33.088c.044-.192.223-.354.415-.321a.412.412 0 0 1 .396.344l5.685 33.46a.414.414 0 0 1-.339.477 34.201 34.201 0 0 1-5.738.481zm-7.072-1.574c4 .86 8.22.98 12.264.344l-5.267-30.999-6.997 30.655z"/><path fill="#2c2c2c" d="M97.832 106.652a.413.413 0 0 1-.324-.156L63.651 64.041a.413.413 0 0 1 .577-.584l42.833 33.379a.414.414 0 0 1 .072.581 54.697 54.697 0 0 1-9.045 9.146.409.409 0 0 1-.256.089zM66.477 66.258l31.42 39.399a53.985 53.985 0 0 0 8.329-8.423L66.477 66.258z"/></svg>
+                `},
+                { name: "Streamlit", svg: `
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 128 128">  <path d="M 63.992579,72.521325 41.553732,60.660321 2.6034211,40.074058 c -0.035557,-0.03555 -0.1066637,-0.03555 -0.1422174,-0.03555 -1.4221913,-0.675528 -2.87993927,0.746641 -2.3466152,2.168863 l 19.8466965,50.619383 0.0035,0.0109 c 0.02134,0.04994 0.03912,0.09944 0.06046,0.149334 0.814189,1.887956 2.591938,3.054 4.526143,3.512657 0.163538,0.03587 0.280527,0.06782 0.476917,0.107073 0.195451,0.04351 0.46881,0.10282 0.703471,0.120745 0.03912,0.0033 0.07467,0.0033 0.113789,0.0065 h 0.02846 c 0.02841,0.0044 0.05687,0.0044 0.08533,0.0076 h 0.03908 c 0.02491,0.0033 0.05333,0.0033 0.07824,0.0033 h 0.04621 c 0.02846,0.0044 0.05687,0.0044 0.08533,0.0044 v 0 c 25.135232,2.740415 50.493562,2.740415 75.628755,0 v 0 c 0.30207,0 0.59732,-0.0145 0.88147,-0.04263 0.0926,-0.0109 0.18133,-0.02137 0.27051,-0.03195 0.0107,-0.0044 0.0247,-0.0044 0.0354,-0.0076 0.0606,-0.0076 0.12074,-0.01788 0.18133,-0.02857 0.0887,-0.0109 0.17791,-0.02813 0.26666,-0.04612 0.17791,-0.03925 0.25855,-0.06738 0.50004,-0.1506 0.24106,-0.08276 0.64169,-0.22784 0.89214,-0.348585 0.25087,-0.120746 0.42452,-0.236792 0.63444,-0.368201 0.2594,-0.163837 0.50644,-0.331086 0.75689,-0.518812 0.10794,-0.08276 0.18175,-0.135683 0.25983,-0.210351 l -0.0427,-0.02475 z" fill="#ff4b4b" id="path14" style="stroke-width:0.426657"/>  <path d="m 125.44606,40.07457 h -0.0354 L 86.445785,60.660834 108.10586,92.919776 127.90272,42.207855 v -0.07109 c 0.49791,-1.493346 -1.0308,-2.844391 -2.45668,-2.062205" fill="#7d353b" id="path16" style="stroke-width:0.426657"/>  <path d="m 66.069117,30.286053 c -0.995816,-1.454191 -3.164512,-1.454191 -4.124488,0 L 41.553817,60.660572 63.992579,72.521761 106.51616,94.995458 c 0.26709,-0.261532 0.48127,-0.516249 0.7074,-0.785468 0.31999,-0.394664 0.61865,-0.817481 0.8819,-1.290639 L 86.445379,60.660572 Z" fill="#bd4043" id="path18" style="stroke-width:0.426657"/></svg>
+                `},
+                { name: "Gradio", svg: `
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" style="flex:none;line-height:1" viewBox="0 0 24 24" width="1em"><title>Gradio</title><path clip-rule="evenodd" d="M11.238 7.603a1.532 1.532 0 011.524 0l10.468 6a1.532 1.532 0 010 2.66l-10.468 6c-.472.27-1.052.27-1.524 0l-10.468-6a1.533 1.533 0 010-2.66l10.468-6zm-6.624 7.33L12 19.166l7.386-4.233L12 10.699l-7.386 4.234z" fill="url(#lobe-icons-gradio-fill-0)" fill-rule="evenodd"/><path clip-rule="evenodd" d="M11.238 1.733a1.533 1.533 0 011.524 0l10.468 6a1.532 1.532 0 010 2.659l-10.468 6c-.472.27-1.052.27-1.524 0l-10.468-6a1.532 1.532 0 010-2.659l10.468-6zm-6.624 7.33L12 13.296l7.386-4.233L12 4.829 4.614 9.063z" fill="url(#lobe-icons-gradio-fill-1)" fill-rule="evenodd"/><path clip-rule="evenodd" d="M12.784 10.265L2.291 16.239.774 13.575l10.494-5.974 1.516 2.664z" fill="url(#lobe-icons-gradio-fill-2)" fill-rule="evenodd"/><defs><linearGradient gradientUnits="userSpaceOnUse" id="lobe-icons-gradio-fill-0" x1=".182" x2="19.377" y1="14.907" y2="14.907"><stop stop-color="#F9D100"/><stop offset="1" stop-color="#F97700"/></linearGradient><linearGradient gradientUnits="userSpaceOnUse" id="lobe-icons-gradio-fill-1" x1="23.74" x2="4.519" y1="9.037" y2="9.037"><stop stop-color="#F9D100"/><stop offset="1" stop-color="#F97700"/></linearGradient><linearGradient gradientUnits="userSpaceOnUse" id="lobe-icons-gradio-fill-2" x1=".182" x2="19.35" y1="14.907" y2="14.793"><stop stop-color="#F9D100"/><stop offset="1" stop-color="#F97700"/></linearGradient></defs></svg>
+                `},
+                { name: "Keras", svg: `
+                    <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="enable-background:new 0 0 128 128" viewBox="0 0 128 128"><path d="M128 128H0V0h128v128z" style="fill:#d00000"/><path d="M34.1 99.3c0 .1.1.2.1.3l2.2 2.2c.1.1.2.1.3.1h7.5c.1 0 .2-.1.3-.1l2.2-2.2c.1-.1.1-.2.1-.3V75.5c0-.1.1-.2.1-.3l9.5-9.1c.1-.1.2-.1.2 0l24.1 35.6c.1.1.2.1.3.1h10.6c.1 0 .2-.1.3-.2l1.9-3.7v-.3L65.7 56.9c-.1-.1 0-.2 0-.3l25.9-25.8c.1-.1.1-.2.1-.3V30c0-.1 0-.2-.1-.3l-1.5-3.4c0-.1-.1-.2-.2-.2H79.4c-.1 0-.2.1-.3.1L47 58.5c-.1.1-.1 0-.1-.1V28.9c0-.1-.1-.2-.1-.3l-2.2-2.3c-.1-.1-.2-.1-.3-.1h-7.6c-.1 0-.2.1-.3.1l-2.2 2.4c-.1.1-.1.2-.1.3v70.3z" style="fill:#fff"/>
+                        </svg>
+                `},
+                { name: "OpenCV", svg: `
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800px" height="800px" viewBox="-30.5 0 317 317" version="1.1" preserveAspectRatio="xMidYMid">
+	                <g>
+		            <path d="M96.8988295,111.577478 C73.5242954,98.0821845 62.1282337,70.5696577 69.1139117,44.4987526 C76.0995896,18.4278475 99.725132,0.299331211 126.715719,0.299331211 C153.706306,0.299331211 177.331848,18.4278475 184.317526,44.4987526 C191.303204,70.5696577 179.907143,98.0821845 156.532609,111.577478 L138.577759,80.4787667 C147.87684,75.1099399 152.41053,64.1646434 149.631421,53.7928665 C146.852312,43.4210897 137.453373,36.20903 126.715719,36.20903 C115.978066,36.20903 106.579126,43.4210897 103.800017,53.7928665 C101.020908,64.1646434 105.554598,75.1099399 114.853679,80.4787667 L96.8988295,111.577478 Z" fill="#FF0101">
+                    </path>
+		            <path d="M164.965719,237.292642 C141.591185,223.797348 130.195123,196.284822 137.180801,170.213917 C144.166479,144.143011 167.792022,126.014495 194.782609,126.014495 C221.773196,126.014495 245.398738,144.143011 252.384416,170.213917 C259.370094,196.284822 247.974032,223.797348 224.599498,237.292642 L206.644649,206.193931 C215.94373,200.825104 220.47742,189.879807 217.698311,179.508031 C214.919201,169.136254 205.520262,161.924194 194.782609,161.924194 C184.044955,161.924194 174.646016,169.136254 171.866907,179.508031 C169.087798,189.879807 173.621488,200.825104 182.920569,206.193931 L164.965719,237.292642 Z" fill="#0101FF" transform="translate(194.782609, 181.653569) rotate(180.000000) translate(-194.782609, -181.653569) ">
+                    </path>
+		            <path d="M119.56689,177.658863 C119.56689,204.64945 101.438373,228.274992 75.3674681,235.26067 C49.296563,242.246348 21.7840362,230.850287 8.28874269,207.475752 C-5.20655084,184.101218 -1.31956641,154.57664 17.7656607,135.491413 C36.8508879,116.406186 66.3754659,112.519202 89.7499999,126.014495 L71.7951506,157.113207 C62.4960699,151.74438 50.7503199,153.290737 43.1576523,160.883405 C35.5649847,168.476072 34.0186273,180.221822 39.3874541,189.520903 C44.7562808,198.819984 55.7015774,203.353674 66.0733542,200.574565 C76.445131,197.795456 83.6571907,188.396516 83.6571907,177.658863 L119.56689,177.658863 Z" fill="#01FF01">
+                    </path>
+		            <path d="M17.3292308,251.590635 C22.3764548,251.136856 27.4793311,251.141137 32.5008696,251.860334 C35.5959866,252.408294 38.8794649,253.208829 41.2040134,255.464883 C43.6398662,258.183278 44.2391973,261.959064 44.7743144,265.439465 C45.6519064,272.661405 45.5491639,279.986087 44.7743144,287.212308 C44.2563211,290.739799 43.7468896,294.549833 41.4351839,297.41806 C38.9137124,299.97806 35.1892977,300.705819 31.7731104,301.245217 C26.7301672,301.874515 21.6144482,302.020067 16.5501003,301.514916 C13.1210702,301.16388 9.54220736,300.560268 6.6226087,298.60388 C4.73471572,297.405217 3.72013378,295.290435 3.03090301,293.239866 C1.64816054,288.967492 1.47264214,284.429699 1.28428094,279.977525 C1.26287625,274.095518 1.3741806,268.153579 2.52147157,262.365753 C3.14220736,259.664482 3.89565217,256.693512 6.1773913,254.891237 C9.39237458,252.558127 13.4806689,251.993043 17.3292308,251.590635 Z M18.1640134,259.651639 C16.0406689,259.972709 13.3950502,260.148227 12.1150502,262.12602 C10.9977258,265.075585 11.0362542,268.294849 10.8093645,271.398528 C10.7023411,276.933779 10.4240803,282.520401 11.2802676,288.012843 C11.5970569,289.866488 12.2477592,292.075452 14.3068896,292.61913 C18.7719064,293.984749 23.5494314,293.753579 28.1514381,293.492441 C30.4460201,293.141405 33.4897659,292.944482 34.6070903,290.542876 C35.8870903,286.886957 35.7971906,282.939933 35.9555853,279.121338 C35.904214,273.753043 36.2038796,268.282007 34.9195987,263.029298 C34.6113712,261.162809 32.676388,260.366555 31.0367893,260.036923 C26.8072241,259.206421 22.4406689,259.309164 18.1640134,259.651639 Z M63.259398,268.320535 C66.3245485,266.372709 70.130301,266.05592 73.6663545,266.37699 C76.9669565,266.659532 80.6314381,267.781137 82.3994649,270.820602 C84.5099666,274.634916 84.6298328,279.142742 84.7753846,283.397993 C84.681204,287.77311 84.5998662,292.34087 82.793311,296.407759 C81.7616054,298.87786 79.3899666,300.496054 76.8513712,301.133913 C72.9642809,302.088562 68.6919064,302.191304 64.946087,300.641605 C62.921204,299.849632 61.5213378,298.128696 60.361204,296.36495 L60.361204,316.361204 L51.7993311,316.361204 C51.803612,299.811104 51.7907692,283.256722 51.803612,266.706622 C54.5733779,266.693779 57.3431438,266.693779 60.1086288,266.706622 C60.0144482,268.410435 59.9202676,270.109967 59.8731773,271.81806 C60.900602,270.563746 61.8552508,269.185284 63.259398,268.320535 Z M66.0462876,272.789833 C64.0085619,272.948227 61.7910368,273.958528 61.2131104,276.090435 C60.1214716,279.849097 60.3141137,283.830368 60.4725084,287.700334 C60.7379264,290.221806 61.0504348,293.471037 63.7345819,294.601204 C66.6199331,295.718528 69.9505017,295.658595 72.8701003,294.703946 C75.3958528,293.813512 75.7640134,290.842542 76.0294314,288.54796 C76.2948495,284.746488 76.3890301,280.86796 75.6441472,277.113579 C75.3915719,275.65806 74.642408,274.155452 73.2211371,273.543278 C70.9779264,272.554381 68.443612,272.605753 66.0462876,272.789833 Z M95.0196656,268.384749 C99.2278261,266.222876 104.155184,266.145819 108.774314,266.364147 C112.618595,266.685217 117.284816,267.327358 119.40388,271.004682 C121.792642,275.444013 121.403077,280.666756 121.73699,285.538462 L98.3159866,285.538462 C98.5899666,288.051371 98.2646154,290.761204 99.5317726,293.064348 C100.614849,294.883746 102.913712,295.256187 104.857258,295.363211 C107.258863,295.380334 109.844548,295.577258 112.057793,294.459933 C113.32495,293.466756 113.333512,291.70301 113.496187,290.247492 C116.235987,290.243211 118.975786,290.243211 121.715585,290.247492 C121.612843,293.107157 121.244682,296.309298 118.9501,298.321338 C115.503946,301.412174 110.572308,301.733244 106.162943,301.818863 C102.271572,301.703278 98.1618729,301.506355 94.6771906,299.588495 C91.8560535,297.923211 90.9570569,294.502742 90.4604682,291.488963 C89.8311706,287.011104 89.6727759,282.447625 90.207893,277.952642 C90.6445485,274.403746 91.5991973,270.229833 95.0196656,268.384749 Z M100.02408,273.834381 C98.2346488,275.465418 98.4101672,278.17097 98.3331104,280.388495 C103.367492,280.414181 108.401873,280.401338 113.440535,280.392776 C113.431973,278.39786 113.624615,276.223144 112.545819,274.446555 C111.488428,273.008161 109.506355,272.91398 107.879599,272.738462 C105.255385,272.699933 102.361472,272.41311 100.02408,273.834381 Z M139.969498,268.363344 C142.931906,266.308495 146.759064,266.021672 150.243746,266.42408 C153.210435,266.736589 156.352642,267.866756 158.103545,270.426756 C159.657525,272.5501 160.0899,275.255652 160.111304,277.828495 C160.098462,285.679732 160.115585,293.526689 160.107023,301.377926 C157.39291,301.382207 154.683077,301.382207 151.977525,301.377926 C151.964682,293.950502 151.986087,286.527358 151.964682,279.104214 C151.883344,277.481739 151.947559,275.606689 150.727492,274.356656 C149.426087,272.948227 147.38408,272.674247 145.564682,272.68709 C143.364281,272.674247 140.98408,273.05097 139.288829,274.570702 C137.632107,275.983411 137.002809,278.26087 136.994247,280.36709 C136.981405,287.370702 136.998528,294.374314 136.985686,301.373645 C134.275853,301.382207 131.56602,301.382207 128.860468,301.377926 C128.856187,289.819398 128.856187,278.26087 128.860468,266.702341 C131.523211,266.693779 134.190234,266.69806 136.852977,266.702341 C136.840134,268.731505 136.63893,270.747826 136.578997,272.77699 C137.452308,271.137391 138.368428,269.407893 139.969498,268.363344 Z M174.829164,253.174582 C179.315585,251.667692 184.097391,251.453645 188.789298,251.286689 C193.335652,251.308094 198.087492,251.350903 202.334181,253.183144 C204.491773,254.08214 205.985819,256.051371 206.713579,258.226087 C207.899398,261.475318 207.933645,264.994247 207.959331,268.414716 C204.829967,268.414716 201.700602,268.423278 198.575518,268.410435 C198.524147,266.004548 198.708227,263.307559 197.218462,261.261271 C195.711572,259.720134 193.357057,259.724415 191.35786,259.488963 C187.29097,259.411906 183.057124,259.150769 179.161472,260.554916 C177.757324,261.000134 177.029565,262.404281 176.747023,263.757057 C175.946488,267.387291 175.942207,271.13311 175.946488,274.83612 C175.993579,279.784883 175.916522,284.806421 176.973913,289.673846 C177.252174,291.454716 178.891773,292.550635 180.535652,292.944482 C184.337124,293.890569 188.305552,293.753579 192.188361,293.522408 C194.213244,293.25699 196.679064,293.124281 197.950502,291.266355 C199.307559,289.048829 199.080669,286.321873 199.007893,283.830368 C202.167224,283.817525 205.322274,283.821806 208.481605,283.830368 C208.443077,287.764548 208.374582,291.827157 206.944749,295.551572 C206.208428,297.499398 204.688696,299.151839 202.719465,299.896722 C198.853779,301.446421 194.615652,301.544883 190.514515,301.793177 C185.758395,301.874515 180.942341,301.75893 176.293244,300.650167 C173.566288,299.939532 170.586756,298.689498 169.32388,295.979666 C167.709967,292.396522 167.414582,288.41097 166.999331,284.553846 C166.652575,279.459532 166.429967,274.356656 166.554114,269.253779 C166.798127,265.122676 167.174849,260.768963 169.405217,257.168696 C170.591037,255.165217 172.671572,253.910903 174.829164,253.174582 Z M210.022742,251.731906 C213.284816,251.736187 216.54689,251.642007 219.804682,251.778997 C222.976856,261.843478 226.461538,271.805217 229.663679,281.856856 C230.909431,285.718261 231.791304,289.69097 233.079866,293.539532 C234.522542,289.387023 235.447224,285.071839 236.859933,280.910769 C239.989298,271.188763 243.204281,261.496722 246.329365,251.774716 C249.548629,251.637726 252.776455,251.757592 256,251.714783 L256,252.780736 C250.700201,268.932709 245.524548,285.127492 240.331773,301.317993 C235.485753,301.416455 230.631171,301.429298 225.785151,301.309431 C220.622341,284.75505 215.211237,268.277726 210.022742,251.731906 Z" fill="#050505">
+                    </path>
+	                </g>
+                    </svg>
+                `}
+            ];
+
+            // Initialize the tools carousel
+            const carousel = d3.select("#toolsCarousel");
+            const toolItems = carousel.selectAll(".tool-item")
+                .data(tools)
+                .enter()
+                .append("div")
+                .attr("class", "tool-item")
+                .html(d => `${d.svg}<div class="tool-name">${d.name}</div>`);
+
+            // Set carousel width based on number of items
+            const itemWidth = 150;
+            carousel.style("width", `${tools.length * itemWidth}px`);
+
+            // Carousel navigation
+            let currentPosition = 0;
+            const visibleItems = 5;
+            const maxPosition = -(tools.length - visibleItems) * itemWidth;
+
+            d3.select("#nextBtn").on("click", () => {
+                currentPosition = Math.max(currentPosition - itemWidth, maxPosition);
+                carousel.style("transform", `translateX(${currentPosition}px)`);
+            });
+
+            d3.select("#prevBtn").on("click", () => {
+                currentPosition = Math.min(currentPosition + itemWidth, 0);
+                carousel.style("transform", `translateX(${currentPosition}px)`);
+            });
+
+            // Auto-scroll the carousel
+            setInterval(() => {
+                if (currentPosition <= maxPosition) {
+                    currentPosition = 0;
+                } else {
+                    currentPosition -= itemWidth;
+                }
+                carousel.style("transform", `translateX(${currentPosition}px)`);
+            }, 3000);
+        }
+
+        // Create Certificates Grid
+        function createCertificatesGrid() {
+            // Certificates Data (replace with your actual certificate images)
+            const certificates = [
+                { 
+                    title: "Data Science Professional Certificate", 
+                    issuer: "Coursera", 
+                    category: "Professional Certificate",
+                    date: "June 2023", 
+                    image: "https://via.placeholder.com/300x200?text=Data+Science+Certificate" 
+                },
+                { 
+                    title: "Machine Learning Specialization", 
+                    issuer: "Stanford University", 
+                    category: "Specialization Certificate",
+                    date: "March 2023", 
+                    image: "https://via.placeholder.com/300x200?text=ML+Specialization" 
+                },
+                { 
+                    title: "Fundamentals of Visualization with Tableau", 
+                    issuer: "University of California, Davis", 
+                    category: "Course Certificate",
+                    date: "August 2023", 
+                    image: "C:/Users/Shreya/Downloads/AICOCOON PROJECTS/d3_viz/images/tableau.png" 
+                },
+                { 
+                    title: "OpenCV Bootcamp", 
+                    issuer: "OpenCV University",
+                    category: "Professional Certificate", 
+                    date: "June 2024", 
+                    image: "C:/Users/Shreya/Downloads/AICOCOON PROJECTS/d3_viz/images/opencv.png" 
+                },
+                { 
+                    title: "Natural Language Processing with Probabilistic Models", 
+                    issuer: "DeepLearning.AI", 
+                    category: "Specialization Certificate",
+                    date: "October 2024", 
+                    image: "C:/Users/Shreya/Downloads/AICOCOON PROJECTS/d3_viz/images/nlp2.png" 
+                },
+                { 
+                    title: "Natural Language Processing with Classification and Vector Spaces", 
+                    issuer: "DeepLearning.AI", 
+                    category: "Specialization Certificate",
+                    date: "October 2024", 
+                    // image: "https://coursera.org/share/4f40589168091886417beee2f50ed85c" 
+                    image: "C:/Users/Shreya/Downloads/AICOCOON PROJECTS/d3_viz/images/nlp1.png"
+                }
+            ];
+
+            // Create certificates grid
+            const certificatesGrid = d3.select("#certificatesGrid");
+            
+            certificatesGrid.selectAll(".certificate-card")
+                .data(certificates)
+                .enter()
+                .append("div")
+                .attr("class", "certificate-card")
+                .html(d => `
+                    <img src="${d.image}" alt="${d.title}" class="certificate-img">
+                    <div class="certificate-info">
+                        <div class="certificate-title">${d.title}</div>
+                        <div class="certificate-issuer">${d.issuer}</div>
+                        <div class="certificate-category">${d.category}</div>
+                        <div class="certificate-date">${d.date}</div>
+                    </div>
+                `);
+        }
+    </script>
+
+    <!-- Add GitHub Calendar library -->
+    <script src="https://unpkg.com/github-calendar@latest/dist/github-calendar.min.js"></script>
+</body>
+</html>
